@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "motion/react";
+﻿import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
@@ -58,7 +58,7 @@ export function SurpriseModal({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full bg-secondary/70 text-cream transition hover:bg-primary"
+              className="absolute right-3 top-3 z-50 grid h-10 w-10 place-items-center rounded-full bg-secondary/70 text-cream transition hover:bg-primary"
             >
               <X className="h-4 w-4" />
             </button>

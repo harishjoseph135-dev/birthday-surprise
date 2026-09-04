@@ -541,86 +541,133 @@ export function SayYes({ name }: { name: string }) {
   const [downloading, setDownloading] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
 
-  const downloadPdf = useCallback(() => {
+  const downloadPdf = useCallback(async () => {
     const el = ticketRef.current;
     if (!el) return;
     setDownloading(true);
+    try {
+      const { jsPDF } = await import("jspdf");
 
-    // Build a self-contained print window with the ticket HTML
-    const html = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8"/>
-  <title>Friend Day Pass</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@700&family=Inter:wght@400;600&display=swap"/>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0d0008; display: flex; justify-content: center; align-items: flex-start; padding: 24px; font-family: Inter, sans-serif; }
-    @media print {
-      body { padding: 0; background: #0d0008; }
-      @page { size: A5 portrait; margin: 8mm; }
-    }
-    .ticket {
-      width: 100%; max-width: 420px; border-radius: 20px;
-      background: linear-gradient(160deg, #2a0515 0%, #1a020d 50%, #200410 100%);
-      border: 2.5px solid rgba(233,30,99,0.7);
-      box-shadow: 0 0 40px -8px rgba(233,30,99,0.55);
-      overflow: hidden; font-family: Inter, sans-serif;
-    }
-    .stripe { height: 10px; background: linear-gradient(90deg,#880e38,#c2185b,#e91e63,#f06292,#e91e63,#c2185b,#880e38); }
-    .body { padding: 20px 24px 16px; }
-    .label { font-size: 10px; letter-spacing: 0.4em; color: #c9a227; text-transform: uppercase; text-align: center; }
-    .title { font-family: "Playfair Display", serif; font-size: 28px; color: #fdf3e3; text-align: center; margin: 6px 0 2px; }
-    .subtitle { font-size: 13px; color: rgba(255,255,255,0.5); text-align: center; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px; }
-    .divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(201,162,39,0.5),transparent); margin: 10px 0; }
-    .row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 9px 12px; margin-bottom: 6px; }
-    .row-key { font-size: 11px; color: #c9a227; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; }
-    .row-val { font-size: 15px; color: rgba(255,255,255,0.9); font-weight: 500; text-align: right; }
-    .dashed { border-top: 1px dashed rgba(233,30,99,0.3); margin: 14px 0; }
-    .footer { font-size: 9px; color: rgba(255,255,255,0.2); text-align: center; letter-spacing: 0.25em; text-transform: uppercase; padding-bottom: 4px; }
-    .hearts { text-align: center; font-size: 22px; margin: 8px 0 4px; }
-  </style>
-</head>
-<body>
-  <div class="ticket">
-    <div class="stripe"></div>
-    <div class="body">
-      <p class="label">Official Document</p>
-      <p class="title">👯 Friend Day Pass</p>
-      <p class="subtitle">Admit Two — Friends</p>
-      <div class="divider"></div>
-      ${[
-        { k: "HOLDER", v: el.querySelector('[data-field="holder"]')?.textContent ?? "" },
-        { k: "DATE", v: el.querySelector('[data-field="date"]')?.textContent ?? "" },
-        { k: "ACTIVITY", v: el.querySelector('[data-field="activity"]')?.textContent ?? "" },
-        { k: "BRINGING", v: el.querySelector('[data-field="bringing"]')?.textContent ?? "" },
-        { k: "ENDING", v: el.querySelector('[data-field="ending"]')?.textContent ?? "" },
-      ]
-        .map(
-          (r) =>
-            `<div class="row"><span class="row-key">${r.k}</span><span class="row-val">${r.v}</span></div>`,
-        )
-        .join("")}
-      <div class="dashed"></div>
-      <div class="hearts">💕 👯 💕</div>
-      <p class="footer">🎉 Have the best day ever 🎉</p>
-    </div>
-    <div class="stripe"></div>
-  </div>
-  <script>window.onload = function(){ window.print(); window.onafterprint = function(){ window.close(); }; }<\/script>
-</body>
-</html>`;
+      // Read data from ticket DOM
+      const holder   = el.querySelector('[data-field="holder"]')?.textContent ?? "";
+      const date     = el.querySelector('[data-field="date"]')?.textContent ?? "";
+      const activity = el.querySelector('[data-field="activity"]')?.textContent ?? "";
+      const bringing = el.querySelector('[data-field="bringing"]')?.textContent ?? "";
+      const ending   = el.querySelector('[data-field="ending"]')?.textContent ?? "";
 
-    const win = window.open("", "_blank", "width=500,height=700");
-    if (!win) {
-      alert("Please allow popups to download the PDF.");
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a5" });
+      const W = doc.internal.pageSize.getWidth();   // 148mm
+      const pad = 12;
+      let y = pad;
+
+      // ── Background
+      doc.setFillColor(26, 2, 13);
+      doc.rect(0, 0, W, doc.internal.pageSize.getHeight(), "F");
+
+      // ── Top stripe
+      doc.setFillColor(194, 24, 91);
+      doc.rect(0, 0, W, 5, "F");
+
+      // ── Card background
+      doc.setFillColor(42, 5, 21);
+      doc.roundedRect(pad, 8, W - pad * 2, 165, 6, 6, "F");
+
+      // ── Border
+      doc.setDrawColor(233, 30, 99);
+      doc.setLineWidth(0.6);
+      doc.roundedRect(pad, 8, W - pad * 2, 165, 6, 6, "S");
+
+      y = 22;
+
+      // ── "Official Document" label
+      doc.setFontSize(7);
+      doc.setTextColor(201, 162, 39);
+      doc.text("OFFICIAL DOCUMENT", W / 2, y, { align: "center", charSpace: 1.5 });
+      y += 7;
+
+      // ── Title
+      doc.setFontSize(20);
+      doc.setTextColor(253, 243, 227);
+      doc.text("Friend Day Pass", W / 2, y, { align: "center" });
+      y += 5;
+
+      // ── Subtitle
+      doc.setFontSize(8);
+      doc.setTextColor(120, 80, 100);
+      doc.text("ADMIT TWO \u2014 FRIENDS", W / 2, y, { align: "center", charSpace: 1 });
+      y += 7;
+
+      // ── Gold divider
+      doc.setDrawColor(201, 162, 39);
+      doc.setLineWidth(0.3);
+      doc.line(pad + 6, y, W - pad - 6, y);
+      y += 6;
+
+      // ── Rows
+      const rows = [
+        { k: "HOLDER",   v: holder },
+        { k: "DATE",     v: date },
+        { k: "ACTIVITY", v: activity },
+        { k: "BRINGING", v: bringing },
+        { k: "ENDING",   v: ending },
+      ];
+      const rowH = 14;
+      const rowX = pad + 4;
+      const rowW = W - (pad + 4) * 2;
+
+      rows.forEach((row) => {
+        // Row background
+        doc.setFillColor(255, 255, 255, 0.04);
+        doc.setFillColor(50, 10, 25);
+        doc.roundedRect(rowX, y, rowW, rowH - 2, 2, 2, "F");
+
+        // Key
+        doc.setFontSize(7.5);
+        doc.setTextColor(201, 162, 39);
+        doc.text(row.k, rowX + 4, y + 8);
+
+        // Value
+        doc.setFontSize(10);
+        doc.setTextColor(240, 230, 235);
+        doc.text(row.v, rowX + rowW - 4, y + 8.5, { align: "right" });
+
+        y += rowH;
+      });
+
+      y += 2;
+
+      // ── Dashed divider
+      doc.setDrawColor(233, 30, 99);
+      doc.setLineWidth(0.3);
+      doc.setLineDashPattern([1, 1.5], 0);
+      doc.line(rowX, y, rowX + rowW, y);
+      doc.setLineDashPattern([], 0);
+      y += 8;
+
+      // ── Hearts
+      doc.setFontSize(14);
+      doc.setTextColor(233, 30, 99);
+      doc.text("\u2665  \u2665  \u2665", W / 2, y, { align: "center" });
+      y += 8;
+
+      // ── Footer
+      doc.setFontSize(7);
+      doc.setTextColor(80, 40, 60);
+      doc.text("HAVE THE BEST DAY EVER", W / 2, y, { align: "center", charSpace: 1 });
+
+      // ── Bottom stripe
+      const pageH = doc.internal.pageSize.getHeight();
+      doc.setFillColor(194, 24, 91);
+      doc.rect(0, pageH - 5, W, 5, "F");
+
+      // ── Save directly — no print dialog
+      doc.save("friend-day-pass.pdf");
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+      alert("Download failed — please try again.");
+    } finally {
       setDownloading(false);
-      return;
     }
-    win.document.write(html);
-    win.document.close();
-    setDownloading(false);
   }, []);
 
   const TOTAL = 6;
