@@ -106,7 +106,7 @@ export function PinLock({
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ delay: 0.5, duration: 1.1 }}
         style={{ fontFamily: "var(--font-display)" }}
-        className="mt-6 max-w-xl text-balance text-3xl leading-tight text-cream sm:text-5xl"
+        className="mt-6 max-w-xl text-balance text-2xl leading-tight text-cream sm:text-5xl px-2"
       >
         Someone special left something here for you…
       </motion.h1>
@@ -149,7 +149,7 @@ export function PinLock({
         className="mt-10 w-full max-w-md"
       >
         <div
-          className="flex items-center justify-center gap-2 sm:gap-3"
+          className="flex items-center justify-center gap-1 sm:gap-3"
           style={error ? { animation: "shake-x 0.5s ease" } : undefined}
         >
           {digits.map((d, i) => (
@@ -165,10 +165,14 @@ export function PinLock({
               autoComplete="one-time-code"
               aria-label={`PIN digit ${i + 1}`}
               maxLength={LEN}
-              className={`h-13 w-11 rounded-full glass text-center text-xl font-semibold text-cream outline-none transition-all duration-300 focus:scale-110 focus:ring-2 focus:ring-gold sm:h-16 sm:w-14 sm:text-2xl ${
+              className={`rounded-full glass text-center font-semibold text-cream outline-none transition-all duration-300 focus:scale-110 focus:ring-2 focus:ring-gold ${
                 error ? "ring-2 ring-destructive" : ""
               }`}
-              style={{ height: "3.25rem" }}
+              style={{
+                width: "clamp(2.2rem, 12vw, 3.5rem)",
+                height: "clamp(2.2rem, 12vw, 3.5rem)",
+                fontSize: "clamp(0.9rem, 4vw, 1.5rem)",
+              }}
             />
           ))}
         </div>

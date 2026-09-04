@@ -16,17 +16,28 @@ function seeded(count: number, seed: number) {
   }));
 }
 
-/** Premium dreamy background: stars, blobs, particles, shooting stars, subtle grain. Responds to mouse. */
+/** Detect mobile/touch once at module load — no state, no re-render */
+const isMobile =
+  typeof window !== "undefined" &&
+  (window.matchMedia("(hover: none), (max-width: 640px)").matches || window.innerWidth <= 640);
+
 export function DreamyBackground() {
   const blobRef = useRef<HTMLDivElement>(null);
 
-  const stars = useMemo(() => seeded(60, 11), []);
-  const particles = useMemo(() => seeded(35, 29), []);
-  const balloons = useMemo(() => seeded(6, 53), []);
+  // Reduce counts heavily on mobile to prevent lag
+  const starCount = isMobile ? 20 : 60;
+  const particleCount = isMobile ? 10 : 35;
+  const balloonCount = isMobile ? 3 : 6;
+
+  const stars = useMemo(() => seeded(starCount, 11), [starCount]);
+  const particles = useMemo(() => seeded(particleCount, 29), [particleCount]);
+  const balloons = useMemo(() => seeded(balloonCount, 53), [balloonCount]);
 
   useEffect(() => {
     const blob = blobRef.current;
     if (!blob) return;
+    // Skip parallax on mobile — saves constant repaints
+    if (isMobile) return;
     const onMove = (e: MouseEvent | TouchEvent) => {
       const x = "touches" in e ? e.touches[0]!.clientX : (e as MouseEvent).clientX;
       const y = "touches" in e ? e.touches[0]!.clientY : (e as MouseEvent).clientY;
@@ -35,33 +46,31 @@ export function DreamyBackground() {
       blob.style.transform = `translate(${dx}px, ${dy}px)`;
     };
     window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("touchmove", onMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("touchmove", onMove);
     };
   }, []);
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Moving gradient base */}
+      {/* Static gradient base */}
       <div className="absolute inset-0 romance-bg" />
 
-      {/* Mouse-following blobs */}
+      {/* Mouse-following blobs — static on mobile */}
       <div
         ref={blobRef}
-        className="absolute inset-0 transition-transform duration-700 ease-out"
-        style={{ willChange: "transform" }}
+        className="absolute inset-0"
+        style={{ willChange: isMobile ? "auto" : "transform" }}
       >
         <div
           className="absolute rounded-full"
           style={{
             left: "15%",
             top: "20%",
-            width: 500,
-            height: 500,
+            width: isMobile ? 300 : 500,
+            height: isMobile ? 300 : 500,
             background: "oklch(0.35 0.14 12 / 0.4)",
-            filter: "blur(110px)",
+            filter: "blur(80px)",
           }}
         />
         <div
@@ -69,27 +78,29 @@ export function DreamyBackground() {
           style={{
             right: "10%",
             bottom: "15%",
-            width: 450,
-            height: 450,
+            width: isMobile ? 260 : 450,
+            height: isMobile ? 260 : 450,
             background: "oklch(0.28 0.1 350 / 0.3)",
-            filter: "blur(120px)",
+            filter: "blur(80px)",
           }}
         />
-        <div
-          className="absolute rounded-full"
-          style={{
-            left: "50%",
-            top: "50%",
-            width: 350,
-            height: 350,
-            transform: "translate(-50%,-50%)",
-            background: "oklch(0.82 0.12 85 / 0.08)",
-            filter: "blur(90px)",
-          }}
-        />
+        {!isMobile && (
+          <div
+            className="absolute rounded-full"
+            style={{
+              left: "50%",
+              top: "50%",
+              width: 350,
+              height: 350,
+              transform: "translate(-50%,-50%)",
+              background: "oklch(0.82 0.12 85 / 0.08)",
+              filter: "blur(90px)",
+            }}
+          />
+        )}
       </div>
 
-      {/* Stars */}
+      {/* Stars — reduced on mobile */}
       {stars.map((s, i) => (
         <span
           key={`star-${i}`}
@@ -105,25 +116,26 @@ export function DreamyBackground() {
         />
       ))}
 
-      {/* Gold particles floating up */}
-      {particles.map((p, i) => (
-        <span
-          key={`part-${i}`}
-          className="absolute rounded-full"
-          style={{
-            left: `${p.left}%`,
-            bottom: -10,
-            width: 2 + p.size * 3,
-            height: 2 + p.size * 3,
-            background: p.op > 0.5 ? "oklch(0.82 0.12 85 / 0.7)" : "oklch(0.85 0.07 8 / 0.6)",
-            animation: `float-up ${14 + p.dur * 20}s linear ${p.delay * 20}s infinite`,
-          }}
-        />
-      ))}
+      {/* Gold particles — reduced on mobile, skip on very small */}
+      {!isMobile &&
+        particles.map((p, i) => (
+          <span
+            key={`part-${i}`}
+            className="absolute rounded-full"
+            style={{
+              left: `${p.left}%`,
+              bottom: -10,
+              width: 2 + p.size * 3,
+              height: 2 + p.size * 3,
+              background: p.op > 0.5 ? "oklch(0.82 0.12 85 / 0.7)" : "oklch(0.85 0.07 8 / 0.6)",
+              animation: `float-up ${14 + p.dur * 20}s linear ${p.delay * 20}s infinite`,
+            }}
+          />
+        ))}
 
-      {/* Floating mini heart balloons */}
+      {/* Floating heart balloons — reduced on mobile */}
       {balloons.map((b, i) => {
-        const sz = 18 + b.size * 20;
+        const sz = isMobile ? 14 + b.size * 14 : 18 + b.size * 20;
         const col = i % 2 === 0 ? "oklch(0.62 0.19 14)" : "oklch(0.85 0.07 8)";
         const shine = i % 3 === 0 ? "oklch(0.90 0.12 340)" : "white";
         return (
@@ -140,12 +152,10 @@ export function DreamyBackground() {
               animation: `float-up ${22 + b.dur * 20}s linear ${b.delay * 25}s infinite`,
             }}
           >
-            {/* Heart */}
             <path
               d="M27.5,56 C27.5,56 6,40 6,22 C6,11 14,4 22,4 C25,4 27.5,7 27.5,7 C27.5,7 30,4 33,4 C41,4 49,11 49,22 C49,40 27.5,56 27.5,56 Z"
               fill={col}
             />
-            {/* Shine */}
             <ellipse
               cx="19"
               cy="16"
@@ -155,9 +165,7 @@ export function DreamyBackground() {
               opacity="0.28"
               transform="rotate(-20 19 16)"
             />
-            {/* Knot */}
             <ellipse cx="27.5" cy="58" rx="2.5" ry="2" fill={col} opacity="0.8" />
-            {/* String */}
             <path
               d="M27.5 60 C31 66,23 69,27.5 74"
               stroke="oklch(0.86 0.12 88)"
@@ -169,29 +177,32 @@ export function DreamyBackground() {
         );
       })}
 
-      {/* Shooting stars */}
-      {[0, 1, 2].map((i) => (
-        <span
-          key={`shoot-${i}`}
-          className="absolute h-px rounded-full"
+      {/* Shooting stars — desktop only */}
+      {!isMobile &&
+        [0, 1, 2].map((i) => (
+          <span
+            key={`shoot-${i}`}
+            className="absolute h-px rounded-full"
+            style={{
+              top: `${10 + i * 25}%`,
+              left: "110%",
+              width: 80 + i * 40,
+              background: "linear-gradient(90deg, oklch(0.82 0.12 85 / 0.8), transparent)",
+              animation: `shooting-star ${6 + i * 3}s linear ${i * 4}s infinite`,
+            }}
+          />
+        ))}
+
+      {/* Subtle noise grain — skip on mobile */}
+      {!isMobile && (
+        <div
+          className="absolute inset-0 opacity-[0.04] mix-blend-soft-light"
           style={{
-            top: `${10 + i * 25}%`,
-            left: "110%",
-            width: 80 + i * 40,
-            background: "linear-gradient(90deg, oklch(0.82 0.12 85 / 0.8), transparent)",
-            animation: `shooting-star ${6 + i * 3}s linear ${i * 4}s infinite`,
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>\")",
           }}
         />
-      ))}
-
-      {/* Subtle noise grain */}
-      <div
-        className="absolute inset-0 opacity-[0.04] mix-blend-soft-light"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>\")",
-        }}
-      />
+      )}
     </div>
   );
 }

@@ -73,21 +73,21 @@ export function FinalSurprise({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
-          className="fixed inset-0 z-[70] overflow-y-auto bg-[oklch(0.06_0.03_10)]/98 px-5 py-14 backdrop-blur-lg"
+          className="fixed inset-0 z-[70] overflow-y-auto bg-[oklch(0.06_0.03_10)]/98 px-4 py-8 sm:py-14 backdrop-blur-lg"
         >
           {/* Ambient glow orbs */}
           <div className="pointer-events-none fixed inset-0 overflow-hidden">
-            <motion.div
+            <div
               className="absolute left-1/4 top-1/3 h-96 w-96 -translate-x-1/2 rounded-full"
-              style={{ background: "oklch(0.35 0.14 12 / 0.35)", filter: "blur(120px)" }}
-              animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 4, repeat: Infinity }}
+              style={{
+                background: "oklch(0.35 0.14 12 / 0.35)",
+                filter: "blur(80px)",
+                opacity: 0.5,
+              }}
             />
-            <motion.div
+            <div
               className="absolute right-1/4 bottom-1/3 h-80 w-80 rounded-full"
-              style={{ background: "oklch(0.82 0.12 85 / 0.12)", filter: "blur(110px)" }}
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+              style={{ background: "oklch(0.82 0.12 85 / 0.10)", filter: "blur(80px)" }}
             />
           </div>
 
@@ -114,7 +114,7 @@ export function FinalSurprise({
                   </motion.div>
                   <p
                     style={{ fontFamily: "var(--font-display)" }}
-                    className="text-2xl text-cream/90 sm:text-4xl"
+                    className="text-xl text-cream/90 sm:text-4xl px-2"
                   >
                     Okay… this is the last surprise.
                   </p>
@@ -168,7 +168,7 @@ export function FinalSurprise({
                 >
                   <motion.h2
                     style={{ fontFamily: "var(--font-display)" }}
-                    className="text-balance text-4xl leading-tight text-gold sm:text-6xl"
+                    className="text-balance text-3xl leading-tight text-gold sm:text-6xl"
                   >
                     HAPPY BIRTHDAY,
                     <span className="mt-2 block text-cream">{name}! 🎂</span>
@@ -189,7 +189,7 @@ export function FinalSurprise({
                   initial={{ opacity: 0, scale: 0.84, rotate: -3, filter: "blur(20px)" }}
                   animate={{ opacity: 1, scale: 1, rotate: -1, filter: "blur(0px)" }}
                   transition={{ delay: 0.7, duration: 1.4 }}
-                  className="mx-auto mt-9 w-full max-w-sm rounded-2xl bg-cream p-3 pb-9"
+                  className="mx-auto mt-6 w-full max-w-[85vw] sm:max-w-sm rounded-2xl bg-cream p-3 pb-9"
                   style={{
                     boxShadow:
                       "0 0 60px -10px oklch(0.82 0.12 85 / 0.6), 0 40px 80px -25px rgba(0,0,0,0.85)",
@@ -231,7 +231,7 @@ export function FinalSurprise({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 3, duration: 1 }}
-                  className="mt-10 flex flex-wrap justify-center gap-3"
+                  className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center"
                 >
                   <button
                     type="button"
@@ -314,7 +314,7 @@ export function FinalSurprise({
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   transition={{ duration: 1.2 }}
                   style={{ fontFamily: "var(--font-display)" }}
-                  className="text-xl text-cream/80 sm:text-3xl"
+                  className="text-lg text-cream/80 sm:text-3xl px-2"
                 >
                   You thought six hearts were all I had?
                 </motion.p>
@@ -345,7 +345,7 @@ export function FinalSurprise({
                       <p
                         key={i}
                         style={{ fontFamily: "var(--font-hand)" }}
-                        className="mb-3 text-lg leading-relaxed text-cream/90"
+                        className="mb-3 text-base leading-relaxed text-cream/90 sm:text-lg"
                       >
                         {p}
                       </p>

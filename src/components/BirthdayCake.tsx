@@ -99,7 +99,7 @@ export function BirthdayCake() {
         }}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.97 }}
-        className="mx-auto mt-2 flex cursor-pointer items-center gap-3 rounded-2xl glass px-8 py-4 text-base font-semibold text-cream transition hover:bg-primary/20"
+        className="w-full sm:w-auto mx-auto mt-2 flex cursor-pointer items-center justify-center gap-3 rounded-2xl glass px-8 py-4 text-base font-semibold text-cream transition hover:bg-primary/20"
       >
         🍰 Make a Wish
       </motion.button>
@@ -118,7 +118,8 @@ export function BirthdayCake() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", stiffness: 280, damping: 22 }}
-              className="flex w-full max-w-xs flex-col items-center rounded-3xl glass p-7 text-center"
+              className="flex w-full max-w-xs flex-col items-center rounded-3xl glass p-5 sm:p-7 text-center overflow-y-auto"
+              style={{ maxHeight: "90svh" }}
               onClick={(e) => e.stopPropagation()}
             >
               {!wished ? (
@@ -131,7 +132,7 @@ export function BirthdayCake() {
                   {/* Cake visual */}
                   <div className="mt-5 flex flex-col items-center">
                     {/* Candles */}
-                    <div className="flex gap-4 mb-1">
+                    <div className="flex gap-2 sm:gap-4 mb-1">
                       {lit.map((on, i) => (
                         <motion.button
                           key={i}
@@ -174,8 +175,9 @@ export function BirthdayCake() {
 
                     {/* Cake tiers */}
                     <div
-                      className="w-48 rounded-lg"
+                      className="rounded-lg"
                       style={{
+                        width: "min(192px, 72vw)",
                         height: 28,
                         background:
                           "linear-gradient(to right, oklch(0.62 0.19 14), oklch(0.85 0.07 8))",
@@ -183,8 +185,9 @@ export function BirthdayCake() {
                       }}
                     />
                     <div
-                      className="w-56 rounded-lg"
+                      className="rounded-lg"
                       style={{
+                        width: "min(224px, 84vw)",
                         height: 36,
                         marginTop: 2,
                         background:
@@ -192,8 +195,9 @@ export function BirthdayCake() {
                       }}
                     />
                     <div
-                      className="w-64 rounded-lg"
+                      className="rounded-lg"
                       style={{
+                        width: "min(256px, 90vw)",
                         height: 40,
                         marginTop: 2,
                         background:

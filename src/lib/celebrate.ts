@@ -75,13 +75,19 @@ function loop() {
   }
 }
 
+const isMobileDevice =
+  typeof window !== "undefined" &&
+  (window.matchMedia("(hover: none)").matches || window.innerWidth <= 640);
+
 export function celebrate(
   opts: { count?: number; origin?: { x: number; y: number }; power?: number } = {},
 ) {
   const el = ensureCanvas();
   if (!el) return;
-  const count = opts.count ?? 90;
-  const power = opts.power ?? 9;
+  // Halve counts on mobile
+  const baseCount = opts.count ?? 90;
+  const count = isMobileDevice ? Math.floor(baseCount * 0.45) : baseCount;
+  const power = isMobileDevice ? (opts.power ?? 9) * 0.75 : (opts.power ?? 9);
   const ox = opts.origin?.x ?? window.innerWidth / 2;
   const oy = opts.origin?.y ?? window.innerHeight / 2;
   for (let i = 0; i < count; i++) {
@@ -104,6 +110,12 @@ export function celebrate(
 }
 
 export function celebrateBig() {
+  if (isMobileDevice) {
+    // On mobile: single burst only, much smaller
+    celebrate({ count: 80, power: 10 });
+    setTimeout(() => celebrate({ count: 60, power: 9 }), 400);
+    return;
+  }
   celebrate({ count: 160, power: 13 });
   setTimeout(
     () =>

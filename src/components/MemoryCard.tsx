@@ -40,6 +40,7 @@ export function MemoryCard({
         animate={{ opacity: 1, scale: 1, rotate: -1.5, y: 0 }}
         transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         className="relative mx-auto mt-7 w-full max-w-[280px] rounded-xl bg-cream p-3 pb-12 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.75)]"
+        style={{ maxWidth: "min(280px, calc(100vw - 3rem))" }}
       >
         {/* Film strip dots */}
         <div className="mb-2 flex justify-between px-1">

@@ -505,7 +505,7 @@ function RunawayNo() {
     "Nuh-uh!",
   ];
   const flee = () => {
-    setPos({ x: (Math.random() - 0.5) * 180, y: (Math.random() - 0.5) * 120 });
+    setPos({ x: (Math.random() - 0.5) * 120, y: 20 + Math.random() * 60 });
     setAttempts((a) => a + 1);
   };
   return (
@@ -541,96 +541,87 @@ export function SayYes({ name }: { name: string }) {
   const [downloading, setDownloading] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
 
-  const downloadJpeg = useCallback(async () => {
-    if (!ticketRef.current) return;
+  const downloadPdf = useCallback(() => {
+    const el = ticketRef.current;
+    if (!el) return;
     setDownloading(true);
-    try {
-      const html2canvas = (await import("html2canvas")).default;
-      const el = ticketRef.current;
 
-      // Clone and sanitize oklch colors (html2canvas doesn't support them)
-      const clone = el.cloneNode(true) as HTMLElement;
-      clone.style.position = "fixed";
-      clone.style.top = "-9999px";
-      clone.style.left = "-9999px";
-      clone.style.transform = "none";
-      clone.style.width = el.offsetWidth + "px";
-      document.body.appendChild(clone);
-
-      // Replace oklch in all inline styles recursively
-      const sanitize = (node: HTMLElement) => {
-        if (node.style) {
-          const s = node.getAttribute("style") || "";
-          if (s.includes("oklch")) {
-            node.setAttribute(
-              "style",
-              s
-                .replace(/oklch\(0\.78\s+0\.14\s+78[^)]*\)/g, "#c9a227")
-                .replace(/oklch\(0\.82\s+0\.12\s+85[^)]*\)/g, "#d4a520")
-                .replace(/oklch\(0\.62\s+0\.19\s+14[^)]*\)/g, "#e91e63")
-                .replace(/oklch\([^)]*\)/g, "#ffffff"),
-            );
-          }
-        }
-        Array.from(node.children).forEach((c) => sanitize(c as HTMLElement));
-      };
-      sanitize(clone);
-
-      await new Promise((r) => setTimeout(r, 120));
-
-      const canvas = await html2canvas(clone, {
-        backgroundColor: "#1a020d",
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        foreignObjectRendering: false,
-        removeContainer: false,
-        imageTimeout: 8000,
-      });
-
-      document.body.removeChild(clone);
-
-      canvas.toBlob(
-        async (blob) => {
-          if (!blob) {
-            alert("Could not generate image.");
-            setDownloading(false);
-            return;
-          }
-          const file = new File([blob], "friend-day-pass.jpg", { type: "image/jpeg" });
-
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({ files: [file], title: "Friend Day Pass 👯" });
-            } catch {
-              triggerDownload(blob);
-            }
-          } else {
-            triggerDownload(blob);
-          }
-          setDownloading(false);
-        },
-        "image/jpeg",
-        0.95,
-      );
-    } catch (err) {
-      console.error("Download failed:", err);
-      alert("Download failed — please try again.");
-      setDownloading(false);
+    // Build a self-contained print window with the ticket HTML
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Friend Day Pass</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@700&family=Inter:wght@400;600&display=swap"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d0008; display: flex; justify-content: center; align-items: flex-start; padding: 24px; font-family: Inter, sans-serif; }
+    @media print {
+      body { padding: 0; background: #0d0008; }
+      @page { size: A5 portrait; margin: 8mm; }
     }
-  }, []);
+    .ticket {
+      width: 100%; max-width: 420px; border-radius: 20px;
+      background: linear-gradient(160deg, #2a0515 0%, #1a020d 50%, #200410 100%);
+      border: 2.5px solid rgba(233,30,99,0.7);
+      box-shadow: 0 0 40px -8px rgba(233,30,99,0.55);
+      overflow: hidden; font-family: Inter, sans-serif;
+    }
+    .stripe { height: 10px; background: linear-gradient(90deg,#880e38,#c2185b,#e91e63,#f06292,#e91e63,#c2185b,#880e38); }
+    .body { padding: 20px 24px 16px; }
+    .label { font-size: 10px; letter-spacing: 0.4em; color: #c9a227; text-transform: uppercase; text-align: center; }
+    .title { font-family: "Playfair Display", serif; font-size: 28px; color: #fdf3e3; text-align: center; margin: 6px 0 2px; }
+    .subtitle { font-size: 13px; color: rgba(255,255,255,0.5); text-align: center; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px; }
+    .divider { height: 1px; background: linear-gradient(90deg,transparent,rgba(201,162,39,0.5),transparent); margin: 10px 0; }
+    .row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 9px 12px; margin-bottom: 6px; }
+    .row-key { font-size: 11px; color: #c9a227; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; }
+    .row-val { font-size: 15px; color: rgba(255,255,255,0.9); font-weight: 500; text-align: right; }
+    .dashed { border-top: 1px dashed rgba(233,30,99,0.3); margin: 14px 0; }
+    .footer { font-size: 9px; color: rgba(255,255,255,0.2); text-align: center; letter-spacing: 0.25em; text-transform: uppercase; padding-bottom: 4px; }
+    .hearts { text-align: center; font-size: 22px; margin: 8px 0 4px; }
+  </style>
+</head>
+<body>
+  <div class="ticket">
+    <div class="stripe"></div>
+    <div class="body">
+      <p class="label">Official Document</p>
+      <p class="title">👯 Friend Day Pass</p>
+      <p class="subtitle">Admit Two — Friends</p>
+      <div class="divider"></div>
+      ${[
+        { k: "HOLDER", v: el.querySelector('[data-field="holder"]')?.textContent ?? "" },
+        { k: "DATE", v: el.querySelector('[data-field="date"]')?.textContent ?? "" },
+        { k: "ACTIVITY", v: el.querySelector('[data-field="activity"]')?.textContent ?? "" },
+        { k: "BRINGING", v: el.querySelector('[data-field="bringing"]')?.textContent ?? "" },
+        { k: "ENDING", v: el.querySelector('[data-field="ending"]')?.textContent ?? "" },
+      ]
+        .map(
+          (r) =>
+            `<div class="row"><span class="row-key">${r.k}</span><span class="row-val">${r.v}</span></div>`,
+        )
+        .join("")}
+      <div class="dashed"></div>
+      <div class="hearts">💕 👯 💕</div>
+      <p class="footer">🎉 Have the best day ever 🎉</p>
+    </div>
+    <div class="stripe"></div>
+  </div>
+  <script>window.onload = function(){ window.print(); window.onafterprint = function(){ window.close(); }; }<\/script>
+</body>
+</html>`;
 
-  function triggerDownload(blob: Blob) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "friend-day-pass.jpg";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
+    const win = window.open("", "_blank", "width=500,height=700");
+    if (!win) {
+      alert("Please allow popups to download the PDF.");
+      setDownloading(false);
+      return;
+    }
+    win.document.write(html);
+    win.document.close();
+    setDownloading(false);
+  }, []);
 
   const TOTAL = 6;
 
@@ -673,7 +664,7 @@ export function SayYes({ name }: { name: string }) {
         : "wave";
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full">
       <Particles />
 
       <AnimatePresence mode="wait">
@@ -1223,11 +1214,11 @@ export function SayYes({ name }: { name: string }) {
                         {/* ── INFO ROWS ── */}
                         <div className="space-y-3">
                           {[
-                            { k: "HOLDER", v: name },
-                            { k: "DATE", v: day },
-                            { k: "ACTIVITY", v: activity },
-                            { k: "BRINGING", v: bring },
-                            { k: "ENDING", v: extra },
+                            { k: "HOLDER", v: name, field: "holder" },
+                            { k: "DATE", v: day, field: "date" },
+                            { k: "ACTIVITY", v: activity, field: "activity" },
+                            { k: "BRINGING", v: bring, field: "bringing" },
+                            { k: "ENDING", v: extra, field: "ending" },
                           ].map((row, i) => (
                             <motion.div
                               key={row.k}
@@ -1235,6 +1226,7 @@ export function SayYes({ name }: { name: string }) {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: 0.3 + i * 0.08 }}
                               className="flex items-center justify-between gap-3"
+                              data-field={row.field}
                               style={{
                                 background: "rgba(255,255,255,0.04)",
                                 borderRadius: 10,
@@ -1339,7 +1331,7 @@ export function SayYes({ name }: { name: string }) {
                   <div className="mt-5 flex justify-center">
                     <motion.button
                       type="button"
-                      onClick={downloadJpeg}
+                      onClick={downloadPdf}
                       disabled={downloading}
                       whileHover={{ scale: 1.06, y: -3 }}
                       whileTap={{ scale: 0.97 }}
@@ -1349,7 +1341,7 @@ export function SayYes({ name }: { name: string }) {
                         boxShadow: "0 0 30px -6px rgba(233,30,99,0.8)",
                       }}
                     >
-                      {downloading ? "⏳ Saving..." : "⬇️ Save to Gallery"}
+                      {downloading ? "⏳ Preparing..." : "⬇️ Download as PDF"}
                     </motion.button>
                   </div>
                 </motion.div>

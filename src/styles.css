@@ -278,3 +278,79 @@ body {
 body {
   font-family: var(--font-sans);
 }
+
+/* ── Mobile safe-area & scroll fixes ── */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  /* prevent rubber-band horizontal scroll on iOS */
+  overscroll-behavior-x: none;
+}
+
+/* Prevent fixed overlays from going under iOS notch */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Make sure nothing exceeds viewport on mobile */
+@media (max-width: 480px) {
+  * {
+    max-width: 100vw;
+  }
+  /* Re-allow overflow on elements that need it */
+  .fixed,
+  [class*="fixed"] {
+    max-width: 100vw;
+  }
+}
+
+/* ── Mobile performance optimisations ── */
+@media (max-width: 640px) {
+  /* Reduce backdrop blur cost on mobile — the most expensive GPU op */
+  .glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Promote animated background blobs to their own layer */
+  .romance-bg {
+    will-change: auto;
+  }
+
+  /* Reduce animation count on background elements */
+  @keyframes float-up {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(-100vh);
+      opacity: 0;
+    }
+  }
+
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+/* Prevent layout thrashing from fixed positioning */
+html,
+body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}

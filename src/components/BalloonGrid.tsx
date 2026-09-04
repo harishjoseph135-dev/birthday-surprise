@@ -207,6 +207,10 @@ const Z_OFFSETS = [
   "scale(1.04)",
 ];
 
+const isTouch =
+  typeof window !== "undefined" &&
+  (window.matchMedia("(hover: none)").matches || window.innerWidth <= 640);
+
 export function BalloonGrid({
   surprises,
   popped,
@@ -223,20 +227,15 @@ export function BalloonGrid({
   const smoothY = useSpring(mouseY, { stiffness: 60, damping: 20 });
 
   useEffect(() => {
+    // Skip mouse parallax entirely on touch devices
+    if (isTouch) return;
     const onMove = (e: MouseEvent) => {
       mouseX.set((e.clientX / window.innerWidth - 0.5) * 30);
       mouseY.set((e.clientY / window.innerHeight - 0.5) * 20);
     };
-    const onTouch = (e: TouchEvent) => {
-      if (!e.touches[0]) return;
-      mouseX.set((e.touches[0].clientX / window.innerWidth - 0.5) * 20);
-      mouseY.set((e.touches[0].clientY / window.innerHeight - 0.5) * 15);
-    };
     window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("touchmove", onTouch, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("touchmove", onTouch);
     };
   }, [mouseX, mouseY]);
 
@@ -253,7 +252,7 @@ export function BalloonGrid({
             popped={popped.includes(i)}
             onPop={(origin) => onPop(i, origin)}
             depth={depth}
-            zClass={Z_OFFSETS[i % Z_OFFSETS.length]!}
+            zClass={isTouch ? "scale(1)" : Z_OFFSETS[i % Z_OFFSETS.length]!}
             design={design}
             mouseX={smoothX}
             mouseY={smoothY}
@@ -288,8 +287,9 @@ function BalloonItem({
   const [bursting, setBursting] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
 
-  const tx = useTransform(mouseX, (v) => v * depth);
-  const ty = useTransform(mouseY, (v) => v * depth);
+  // Only apply parallax transform on desktop
+  const tx = useTransform(mouseX, (v) => (isTouch ? 0 : v * depth));
+  const ty = useTransform(mouseY, (v) => (isTouch ? 0 : v * depth));
 
   const handle = (e: React.MouseEvent | React.KeyboardEvent) => {
     if (bursting || popped) return;
@@ -297,7 +297,7 @@ function BalloonItem({
     const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     setBursting(true);
     playPop();
-    celebrate({ count: 70, origin, power: 8 });
+    celebrate({ count: isTouch ? 40 : 70, origin, power: isTouch ? 6 : 8 });
     setTimeout(() => onPop(origin), 620);
   };
 
@@ -315,7 +315,7 @@ function BalloonItem({
         onClick={handle}
         aria-label={`Open surprise ${index + 1}: ${label}`}
         className="group relative flex w-full cursor-pointer flex-col items-center rounded-3xl px-2 pt-2 pb-6 outline-none focus-visible:ring-2 focus-visible:ring-gold"
-        whileHover={{ y: -8 }}
+        whileHover={isTouch ? {} : { y: -8 }}
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
         style={{ transform: zClass }}
       >
@@ -328,34 +328,49 @@ function BalloonItem({
           transition={{ duration: bursting ? 0.65 : 0.4 }}
           className="relative"
           style={{
+            // On mobile, use simpler animation or none to avoid jank
             animation:
-              bursting || popped ? undefined : `bob ${4 + index * 0.45}s ease-in-out infinite`,
+              bursting || popped
+                ? undefined
+                : isTouch
+                  ? `bob ${5 + index * 0.6}s ease-in-out ${index * 0.3}s infinite`
+                  : `bob ${4 + index * 0.45}s ease-in-out infinite`,
           }}
         >
-          <div className="drop-shadow-[0_20px_38px_rgba(0,0,0,0.55)] transition-transform duration-500 group-hover:scale-105">
+          {/* Remove drop-shadow filter on mobile — very expensive */}
+          <div
+            className={
+              isTouch
+                ? ""
+                : "drop-shadow-[0_20px_38px_rgba(0,0,0,0.55)] transition-transform duration-500 group-hover:scale-105"
+            }
+          >
             {design.render(index)}
           </div>
 
-          {/* Glow under balloon */}
-          <div
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full opacity-50 blur-xl"
-            style={{ width: 60, height: 20, background: "oklch(0.62 0.19 14 / 0.5)" }}
-          />
+          {/* Glow — desktop only */}
+          {!isTouch && (
+            <div
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full opacity-50 blur-xl"
+              style={{ width: 60, height: 20, background: "oklch(0.62 0.19 14 / 0.5)" }}
+            />
+          )}
 
-          {/* Sparkles on hover */}
-          {[0, 1, 2].map((s) => (
-            <span
-              key={s}
-              className="pointer-events-none absolute text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{
-                left: `${16 + s * 30}%`,
-                top: `${8 + s * 20}%`,
-                animation: `twinkle ${1.5 + s * 0.5}s ease-in-out infinite`,
-              }}
-            >
-              ✦
-            </span>
-          ))}
+          {/* Sparkles on hover — desktop only */}
+          {!isTouch &&
+            [0, 1, 2].map((s) => (
+              <span
+                key={s}
+                className="pointer-events-none absolute text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  left: `${16 + s * 30}%`,
+                  top: `${8 + s * 20}%`,
+                  animation: `twinkle ${1.5 + s * 0.5}s ease-in-out infinite`,
+                }}
+              >
+                ✦
+              </span>
+            ))}
         </motion.div>
 
         <span className="mt-2 text-xs tracking-[0.25em] text-muted-foreground uppercase">
