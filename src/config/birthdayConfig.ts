@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ✏️ EDIT EVERYTHING HERE — this is the only file you need to change.
  */
 
@@ -61,7 +61,7 @@ export const birthdayConfig = {
   birthdayDate: "2026-09-11T00:00:00",
 
   /** 6-digit PIN */
-  secretPin: "123456",
+  secretPin: "629011",
 
   /** Hint under the lock — set "" to hide */
   pinHint: "Think more to find 🤔",

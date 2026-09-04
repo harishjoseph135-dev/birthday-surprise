@@ -1,0 +1,5 @@
+﻿/assets/music/*
+  cache-control: no-cache, no-store, must-revalidate
+  pragma: no-cache
+  expires: 0
+

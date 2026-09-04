@@ -1,10 +1,15 @@
-import { Music, Music2 } from "lucide-react";
+﻿import { Music, Music2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const GAIN = 1.5; // 150% volume via Web Audio API GainNode
 
+// Version stamp — increment this whenever you replace the song file
+// so mobile browsers are forced to re-fetch and ignore old cache
+const SONG_VERSION = "20260904";
+
 /** Floating background-music button — centered at bottom, boosted to 150% volume. */
 export function MusicToggle({ src }: { src: string }) {
+  const cacheBustedSrc = `${src}?v=${SONG_VERSION}`;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
@@ -38,13 +43,11 @@ export function MusicToggle({ src }: { src: string }) {
     gainRef.current = gain;
     connectedRef.current = true;
 
-    // Resume context if suspended (required by autoplay policy)
     if (ctx.state === "suspended") {
       ctx.resume().catch(() => {});
     }
   };
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
@@ -104,7 +107,7 @@ export function MusicToggle({ src }: { src: string }) {
       </button>
       <audio
         ref={audioRef}
-        src={src}
+        src={cacheBustedSrc}
         loop
         preload="none"
         onError={() => setFailed(true)}
