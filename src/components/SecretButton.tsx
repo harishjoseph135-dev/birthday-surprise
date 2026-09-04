@@ -14,14 +14,17 @@ export function SecretButton() {
   const [visible, setVisible] = useState(false);
 
   // Randomize position per session
-  const pos = useMemo(() => ({
-    x: 10 + Math.random() * 75,
-    y: 15 + Math.random() * 65,
-  }), []);
+  const pos = useMemo(
+    () => ({
+      x: 10 + Math.random() * 75,
+      y: 15 + Math.random() * 65,
+    }),
+    [],
+  );
 
   const message = useMemo(
     () => SECRET_MESSAGES[Math.floor(Math.random() * SECRET_MESSAGES.length)]!,
-    []
+    [],
   );
 
   useEffect(() => {

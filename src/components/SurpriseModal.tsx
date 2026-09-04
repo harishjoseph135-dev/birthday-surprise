@@ -22,6 +22,13 @@ export function SurpriseModal({
     };
   }, [open, onClose]);
 
+  // Always restore scroll on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <AnimatePresence>
       {open && (

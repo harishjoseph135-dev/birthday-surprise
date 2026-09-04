@@ -22,9 +22,7 @@ export function RoastCard({
         transition={{ duration: 0.6 }}
         className="inline-flex items-center gap-2 rounded-full border border-red-700/50 bg-red-950/40 px-4 py-1.5"
       >
-        <span className="text-[0.55rem] tracking-[0.4em] text-red-400 uppercase">
-          😂 {title}
-        </span>
+        <span className="text-[0.55rem] tracking-[0.4em] text-red-400 uppercase">😂 {title}</span>
       </motion.div>
 
       {/* File card */}
@@ -42,11 +40,10 @@ export function RoastCard({
           <span className="text-[0.55rem] text-red-800/60 font-mono">CONFIDENTIAL</span>
         </div>
 
-        <p className="mb-1 font-mono text-[0.65rem] text-red-400/80 uppercase tracking-wider">Subject:</p>
-        <p
-          style={{ fontFamily: "var(--font-hand)" }}
-          className="mb-4 text-xl text-blush"
-        >
+        <p className="mb-1 font-mono text-[0.65rem] text-red-400/80 uppercase tracking-wider">
+          Subject:
+        </p>
+        <p style={{ fontFamily: "var(--font-hand)" }} className="mb-4 text-xl text-blush">
           {name}
         </p>
 
@@ -61,7 +58,9 @@ export function RoastCard({
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[0.65rem] text-cream/70 font-mono">{s.label}</span>
-                <span className="text-[0.6rem] tabular-nums text-red-400/80 font-mono">{s.pct}%</span>
+                <span className="text-[0.6rem] tabular-nums text-red-400/80 font-mono">
+                  {s.pct}%
+                </span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-white/10">
                 <motion.div
@@ -71,8 +70,8 @@ export function RoastCard({
                       s.pct >= 90
                         ? "oklch(0.62 0.19 14)"
                         : s.pct >= 60
-                        ? "oklch(0.78 0.14 75)"
-                        : "oklch(0.55 0.12 220)",
+                          ? "oklch(0.78 0.14 75)"
+                          : "oklch(0.55 0.12 220)",
                   }}
                   initial={{ width: 0 }}
                   animate={{ width: `${s.pct}%` }}
@@ -93,7 +92,10 @@ export function RoastCard({
           <p className="text-[0.6rem] tracking-[0.3em] text-red-400 uppercase font-mono mb-1">
             Final Verdict
           </p>
-          <p style={{ fontFamily: "var(--font-hand)" }} className="text-base leading-snug text-cream/90">
+          <p
+            style={{ fontFamily: "var(--font-hand)" }}
+            className="text-base leading-snug text-cream/90"
+          >
             {verdict}
           </p>
         </motion.div>

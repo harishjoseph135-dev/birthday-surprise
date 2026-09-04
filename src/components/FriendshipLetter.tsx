@@ -23,7 +23,10 @@ export function FriendshipLetter({
         /* Envelope closed state */
         <motion.button
           type="button"
-          onClick={() => { setOpen(true); playSparkle(); }}
+          onClick={() => {
+            setOpen(true);
+            playSparkle();
+          }}
           whileHover={{ scale: 1.04, y: -6 }}
           whileTap={{ scale: 0.97 }}
           className="mx-auto mt-8 block w-full max-w-xs cursor-pointer"

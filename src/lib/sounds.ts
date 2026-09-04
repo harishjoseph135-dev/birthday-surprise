@@ -12,7 +12,9 @@ export function setSfxMuted(value: boolean) {
 
 function getCtx() {
   if (typeof window === "undefined") return null;
-  const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  const Ctor =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!Ctor) return null;
   if (!audioCtx) audioCtx = new Ctor();
   if (audioCtx.state === "suspended") void audioCtx.resume();
@@ -52,5 +54,7 @@ export const playError = () => {
 };
 
 export const playReveal = () => {
-  [392, 523, 659, 784, 1047, 1319].forEach((f, i) => setTimeout(() => tone(f, 0.5, "triangle", 0.1), i * 140));
+  [392, 523, 659, 784, 1047, 1319].forEach((f, i) =>
+    setTimeout(() => tone(f, 0.5, "triangle", 0.1), i * 140),
+  );
 };

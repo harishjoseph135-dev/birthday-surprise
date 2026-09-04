@@ -75,7 +75,9 @@ function loop() {
   }
 }
 
-export function celebrate(opts: { count?: number; origin?: { x: number; y: number }; power?: number } = {}) {
+export function celebrate(
+  opts: { count?: number; origin?: { x: number; y: number }; power?: number } = {},
+) {
   const el = ensureCanvas();
   if (!el) return;
   const count = opts.count ?? 90;
@@ -103,7 +105,23 @@ export function celebrate(opts: { count?: number; origin?: { x: number; y: numbe
 
 export function celebrateBig() {
   celebrate({ count: 160, power: 13 });
-  setTimeout(() => celebrate({ count: 120, origin: { x: window.innerWidth * 0.2, y: window.innerHeight * 0.5 }, power: 12 }), 250);
-  setTimeout(() => celebrate({ count: 120, origin: { x: window.innerWidth * 0.8, y: window.innerHeight * 0.5 }, power: 12 }), 500);
+  setTimeout(
+    () =>
+      celebrate({
+        count: 120,
+        origin: { x: window.innerWidth * 0.2, y: window.innerHeight * 0.5 },
+        power: 12,
+      }),
+    250,
+  );
+  setTimeout(
+    () =>
+      celebrate({
+        count: 120,
+        origin: { x: window.innerWidth * 0.8, y: window.innerHeight * 0.5 },
+        power: 12,
+      }),
+    500,
+  );
   setTimeout(() => celebrate({ count: 140, power: 14 }), 900);
 }

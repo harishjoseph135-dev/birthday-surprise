@@ -8,7 +8,15 @@ import { birthdayConfig } from "@/config/birthdayConfig";
 
 const LEN = 6;
 
-export function PinLock({ pin, hint, onUnlock }: { pin: string; hint?: string; onUnlock: () => void }) {
+export function PinLock({
+  pin,
+  hint,
+  onUnlock,
+}: {
+  pin: string;
+  hint?: string;
+  onUnlock: () => void;
+}) {
   const [digits, setDigits] = useState<string[]>(Array(LEN).fill(""));
   const [error, setError] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
@@ -49,7 +57,10 @@ export function PinLock({ pin, hint, onUnlock }: { pin: string; hint?: string; o
     if (chars.length > 1) {
       setDigits((prev) => {
         const next = [...prev];
-        chars.split("").slice(0, LEN - i).forEach((c, k) => (next[i + k] = c));
+        chars
+          .split("")
+          .slice(0, LEN - i)
+          .forEach((c, k) => (next[i + k] = c));
         return next;
       });
       refs.current[Math.min(LEN - 1, i + chars.length)]?.focus();
@@ -76,7 +87,9 @@ export function PinLock({ pin, hint, onUnlock }: { pin: string; hint?: string; o
   return (
     <motion.div
       className="relative flex min-h-[100svh] w-full flex-col items-center justify-center px-5 py-14 text-center"
-      animate={unlocked ? { scale: 1.12, opacity: 0, filter: "blur(10px)" } : { scale: 1, opacity: 1 }}
+      animate={
+        unlocked ? { scale: 1.12, opacity: 0, filter: "blur(10px)" } : { scale: 1, opacity: 1 }
+      }
       transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.p
@@ -110,13 +123,17 @@ export function PinLock({ pin, hint, onUnlock }: { pin: string; hint?: string; o
 
       <motion.div
         initial={{ opacity: 0, scale: 0.7 }}
-        animate={unlocked ? { scale: [1, 1.35, 1.1], rotate: [0, -8, 0] } : { opacity: 1, scale: 1 }}
+        animate={
+          unlocked ? { scale: [1, 1.35, 1.1], rotate: [0, -8, 0] } : { opacity: 1, scale: 1 }
+        }
         transition={{ delay: unlocked ? 0 : 0.9, duration: unlocked ? 1.2 : 0.8 }}
         className="relative mt-10 grid h-20 w-20 place-items-center rounded-full glass"
       >
         <div
           className="absolute inset-0 rounded-full"
-          style={{ boxShadow: unlocked ? "0 0 90px 10px oklch(0.82 0.12 85 / 0.6)" : "var(--shadow-glow)" }}
+          style={{
+            boxShadow: unlocked ? "0 0 90px 10px oklch(0.82 0.12 85 / 0.6)" : "var(--shadow-glow)",
+          }}
         />
         {unlocked ? (
           <Unlock className="h-8 w-8 text-gold" />
@@ -166,7 +183,11 @@ export function PinLock({ pin, hint, onUnlock }: { pin: string; hint?: string; o
               Hmm… that&apos;s not it 🎈 Try again.
             </motion.p>
           ) : unlocked ? (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-gold">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-sm text-gold"
+            >
               Unlocking your surprise…
             </motion.p>
           ) : (

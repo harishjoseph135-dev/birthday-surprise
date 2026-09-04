@@ -83,9 +83,23 @@ export function AmbientBackground({ hearts = 14 }: { hearts?: number }) {
               d="M27.5,56 C27.5,56 6,40 6,22 C6,11 14,4 22,4 C25,4 27.5,7 27.5,7 C27.5,7 30,4 33,4 C41,4 49,11 49,22 C49,40 27.5,56 27.5,56 Z"
               fill="oklch(0.62 0.19 14)"
             />
-            <ellipse cx="18" cy="15" rx="5" ry="7" fill="white" opacity="0.28" transform="rotate(-20 18 15)" />
+            <ellipse
+              cx="18"
+              cy="15"
+              rx="5"
+              ry="7"
+              fill="white"
+              opacity="0.28"
+              transform="rotate(-20 18 15)"
+            />
             <ellipse cx="27.5" cy="58" rx="2.5" ry="2" fill="oklch(0.45 0.2 14)" opacity="0.8" />
-            <path d="M27.5 60 C31 66,23 69,27.5 74" stroke="oklch(0.86 0.12 88)" strokeWidth="1" fill="none" opacity="0.6" />
+            <path
+              d="M27.5 60 C31 66,23 69,27.5 74"
+              stroke="oklch(0.86 0.12 88)"
+              strokeWidth="1"
+              fill="none"
+              opacity="0.6"
+            />
           </svg>
         );
       })}

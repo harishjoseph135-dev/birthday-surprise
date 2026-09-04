@@ -30,10 +30,7 @@ export function PhotoMemory({
             transition={{ duration: 6, ease: "easeOut" }}
           />
         </div>
-        <p
-          style={{ fontFamily: "var(--font-hand)" }}
-          className="mt-3 text-xl text-wine"
-        >
+        <p style={{ fontFamily: "var(--font-hand)" }} className="mt-3 text-xl text-wine">
           {title}
         </p>
       </motion.div>

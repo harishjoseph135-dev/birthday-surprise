@@ -57,10 +57,7 @@ export function AwardsCard({
                   </motion.span>
                 ))}
               </div>
-              <p
-                style={{ fontFamily: "var(--font-display)" }}
-                className="mt-4 text-lg text-cream"
-              >
+              <p style={{ fontFamily: "var(--font-display)" }} className="mt-4 text-lg text-cream">
                 The 2026 Best Friend Awards
               </p>
               <p className="mt-1 text-xs text-muted-foreground">Loading ceremony...</p>
@@ -83,7 +80,13 @@ export function AwardsCard({
                   background: "radial-gradient(circle, oklch(0.82 0.12 85 / 0.2), transparent 70%)",
                   boxShadow: "0 0 60px -10px oklch(0.82 0.12 85 / 0.6)",
                 }}
-                animate={{ boxShadow: ["0 0 40px -10px oklch(0.82 0.12 85 / 0.4)", "0 0 80px -10px oklch(0.82 0.12 85 / 0.8)", "0 0 40px -10px oklch(0.82 0.12 85 / 0.4)"] }}
+                animate={{
+                  boxShadow: [
+                    "0 0 40px -10px oklch(0.82 0.12 85 / 0.4)",
+                    "0 0 80px -10px oklch(0.82 0.12 85 / 0.8)",
+                    "0 0 40px -10px oklch(0.82 0.12 85 / 0.4)",
+                  ],
+                }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 <span className="text-4xl">{awards[step]!.icon}</span>
@@ -92,15 +95,10 @@ export function AwardsCard({
               <p className="text-[0.6rem] tracking-[0.4em] text-gold uppercase">
                 Award {step + 1} of {total}
               </p>
-              <p
-                style={{ fontFamily: "var(--font-display)" }}
-                className="mt-2 text-xl text-cream"
-              >
+              <p style={{ fontFamily: "var(--font-display)" }} className="mt-2 text-xl text-cream">
                 {awards[step]!.title}
               </p>
-              <p className="mt-2 text-sm text-muted-foreground italic">
-                {awards[step]!.reason}
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground italic">{awards[step]!.reason}</p>
 
               <motion.button
                 type="button"

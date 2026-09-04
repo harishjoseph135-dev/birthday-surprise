@@ -50,7 +50,10 @@ export function BestFriendAwards() {
                   <motion.button
                     key={i}
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setActive(active === i ? null : i); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActive(active === i ? null : i);
+                    }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.08 }}
@@ -73,9 +76,7 @@ export function BestFriendAwards() {
                         )}
                       </AnimatePresence>
                     </div>
-                    <span className="text-xs text-gold">
-                      {active === i ? "▲" : "▼"}
-                    </span>
+                    <span className="text-xs text-gold">{active === i ? "▲" : "▼"}</span>
                   </motion.button>
                 ))}
               </div>

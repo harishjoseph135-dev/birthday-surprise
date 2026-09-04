@@ -11,7 +11,11 @@ export function IntroAnimation({ name, onDone }: { name: string; onDone: () => v
     const t1 = setTimeout(() => setStage("welcome"), 1200);
     const t2 = setTimeout(() => setStage("waiting"), 3000);
     const t3 = setTimeout(() => setStage("ready"), 5000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
 
   const handleGo = () => {
@@ -122,7 +126,8 @@ export function IntroAnimation({ name, onDone }: { name: string; onDone: () => v
                   whileTap={{ scale: 0.96 }}
                   className="relative cursor-pointer rounded-full bg-primary px-10 py-4 text-lg font-semibold text-primary-foreground"
                   style={{
-                    boxShadow: "0 0 40px -8px oklch(0.62 0.19 14 / 0.8), 0 0 80px -20px oklch(0.82 0.12 85 / 0.5)",
+                    boxShadow:
+                      "0 0 40px -8px oklch(0.62 0.19 14 / 0.8), 0 0 80px -20px oklch(0.82 0.12 85 / 0.5)",
                   }}
                 >
                   <span className="relative z-10">LET'S GO ✨</span>

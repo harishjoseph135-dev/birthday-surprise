@@ -9,17 +9,28 @@ const STATS = [
   { label: "Memories Made", pct: 100, icon: "📸" },
 ];
 
-function StatBar({ label, pct, icon, delay }: { label: string; pct: number; icon: string; delay: number }) {
+function StatBar({
+  label,
+  pct,
+  icon,
+  delay,
+}: {
+  label: string;
+  pct: number;
+  icon: string;
+  delay: number;
+}) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting && !started.current) {
           started.current = true;
-          const t = setTimeout(() => {
+          timeoutId = setTimeout(() => {
             let current = 0;
             const step = () => {
               current = Math.min(pct, current + 2);
@@ -28,13 +39,15 @@ function StatBar({ label, pct, icon, delay }: { label: string; pct: number; icon
             };
             requestAnimationFrame(step);
           }, delay * 1000);
-          return () => clearTimeout(t);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    };
   }, [pct, delay]);
 
   return (

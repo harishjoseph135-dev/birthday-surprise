@@ -36,19 +36,31 @@ export function ClassifiedFile({ name }: { name: string }) {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-red-700/40 pb-3">
                 <span className="text-xs tracking-widest text-red-500 uppercase">Top Secret</span>
-                <span className="text-[0.6rem] text-red-700/60">FILE #BD-{Math.floor(Math.random()*9000)+1000}</span>
+                <span className="text-[0.6rem] text-red-700/60">
+                  FILE #BD-{Math.floor(Math.random() * 9000) + 1000}
+                </span>
               </div>
 
               <div className="mt-4 space-y-2 text-xs leading-relaxed text-cream/80">
-                <p className="text-center text-base font-bold tracking-[0.2em] text-red-400 uppercase">🔴 Classified</p>
+                <p className="text-center text-base font-bold tracking-[0.2em] text-red-400 uppercase">
+                  🔴 Classified
+                </p>
                 <div className="mt-3 rounded bg-white/5 p-3 space-y-1.5">
-                  <p><span className="text-red-400">SUBJECT:</span> {name}</p>
-                  <p><span className="text-red-400">STATUS:</span> Certified Chaos</p>
-                  <p><span className="text-red-400">THREAT LEVEL:</span> ⭐⭐⭐⭐⭐</p>
+                  <p>
+                    <span className="text-red-400">SUBJECT:</span> {name}
+                  </p>
+                  <p>
+                    <span className="text-red-400">STATUS:</span> Certified Chaos
+                  </p>
+                  <p>
+                    <span className="text-red-400">THREAT LEVEL:</span> ⭐⭐⭐⭐⭐
+                  </p>
                 </div>
 
                 <div className="mt-3 rounded bg-white/5 p-3">
-                  <p className="mb-2 text-red-400 uppercase tracking-widest text-[0.6rem]">Known Activities:</p>
+                  <p className="mb-2 text-red-400 uppercase tracking-widest text-[0.6rem]">
+                    Known Activities:
+                  </p>
                   <ul className="space-y-1 text-cream/70">
                     <li>▸ Sending random reels at 2am</li>
                     <li>▸ Laughing at literally everything</li>

@@ -51,7 +51,10 @@ export function Balloon({
         }
         transition={{ duration: bursting ? 0.62 : 0.4 }}
         className="relative"
-        style={{ animation: bursting || popped ? undefined : `bob ${4 + index * 0.4}s ease-in-out infinite` }}
+        style={{
+          animation:
+            bursting || popped ? undefined : `bob ${4 + index * 0.4}s ease-in-out infinite`,
+        }}
       >
         <svg
           width="118"

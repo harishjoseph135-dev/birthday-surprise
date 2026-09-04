@@ -18,11 +18,7 @@ const DEFS: Record<Achievement, { icon: string; title: string; sub: string }> = 
   birthday_legend: { icon: "🎂", title: "Birthday Legend", sub: "You're officially legendary." },
 };
 
-export function AchievementSystem({
-  unlocked,
-}: {
-  unlocked: Achievement[];
-}) {
+export function AchievementSystem({ unlocked }: { unlocked: Achievement[] }) {
   const [queue, setQueue] = useState<Achievement[]>([]);
   const [showing, setShowing] = useState<Achievement | null>(null);
   const prevRef = useRef<Achievement[]>([]);

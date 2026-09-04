@@ -2,7 +2,10 @@ import { useEffect, useRef, useMemo } from "react";
 
 function seeded(count: number, seed: number) {
   let s = seed;
-  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const rnd = () => {
+    s = (s * 16807) % 2147483647;
+    return s / 2147483647;
+  };
   return Array.from({ length: count }, () => ({
     left: rnd() * 100,
     top: rnd() * 100,
@@ -53,7 +56,10 @@ export function DreamyBackground() {
         <div
           className="absolute rounded-full"
           style={{
-            left: "15%", top: "20%", width: 500, height: 500,
+            left: "15%",
+            top: "20%",
+            width: 500,
+            height: 500,
             background: "oklch(0.35 0.14 12 / 0.4)",
             filter: "blur(110px)",
           }}
@@ -61,7 +67,10 @@ export function DreamyBackground() {
         <div
           className="absolute rounded-full"
           style={{
-            right: "10%", bottom: "15%", width: 450, height: 450,
+            right: "10%",
+            bottom: "15%",
+            width: 450,
+            height: 450,
             background: "oklch(0.28 0.1 350 / 0.3)",
             filter: "blur(120px)",
           }}
@@ -69,7 +78,10 @@ export function DreamyBackground() {
         <div
           className="absolute rounded-full"
           style={{
-            left: "50%", top: "50%", width: 350, height: 350,
+            left: "50%",
+            top: "50%",
+            width: 350,
+            height: 350,
             transform: "translate(-50%,-50%)",
             background: "oklch(0.82 0.12 85 / 0.08)",
             filter: "blur(90px)",
@@ -134,11 +146,25 @@ export function DreamyBackground() {
               fill={col}
             />
             {/* Shine */}
-            <ellipse cx="19" cy="16" rx="5" ry="7" fill={shine} opacity="0.28" transform="rotate(-20 19 16)" />
+            <ellipse
+              cx="19"
+              cy="16"
+              rx="5"
+              ry="7"
+              fill={shine}
+              opacity="0.28"
+              transform="rotate(-20 19 16)"
+            />
             {/* Knot */}
             <ellipse cx="27.5" cy="58" rx="2.5" ry="2" fill={col} opacity="0.8" />
             {/* String */}
-            <path d="M27.5 60 C31 66,23 69,27.5 74" stroke="oklch(0.86 0.12 88)" strokeWidth="1" fill="none" opacity="0.6" />
+            <path
+              d="M27.5 60 C31 66,23 69,27.5 74"
+              stroke="oklch(0.86 0.12 88)"
+              strokeWidth="1"
+              fill="none"
+              opacity="0.6"
+            />
           </svg>
         );
       })}

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { celebrateBig } from "@/lib/celebrate";
 import { playReveal, playSparkle } from "@/lib/sounds";
 
@@ -20,7 +21,7 @@ const DATE_PLAN = {
   ending: "A night you'll never forget. ✨",
   // ICS event details
   icsStart: "20260913T180000",
-  icsEnd:   "20260913T230000",
+  icsEnd: "20260913T230000",
   icsLocation: "The Rooftop Garden, Marina Bay",
   icsDescription: "A very special evening — just for the two of us. ❤️",
 };
@@ -168,9 +169,16 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
 
   /* NO button funny messages */
   const noLabels = [
-    "NO 💔", "still no 😅", "nope 🙈", "run away 🏃",
-    "not a chance 😂", "try yes instead 👀", "please no 😭",
-    "absolutely not 🙅", "wrong button 😬", "stop it 😂",
+    "NO 💔",
+    "still no 😅",
+    "nope 🙈",
+    "run away 🏃",
+    "not a chance 😂",
+    "try yes instead 👀",
+    "please no 😭",
+    "absolutely not 🙅",
+    "wrong button 😬",
+    "stop it 😂",
   ];
   const noLabel = noLabels[Math.min(noMoves, noLabels.length - 1)]!;
 
@@ -180,14 +188,14 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
     border: "1px solid rgba(255,255,255,0.12)",
     backdropFilter: "blur(20px)",
     WebkitBackdropFilter: "blur(20px)",
-  } as React.CSSProperties;
+  };
 
   /* Rose gradient button */
   const roseBtn = {
     background: "linear-gradient(135deg, #c2185b 0%, #e91e63 50%, #f06292 100%)",
     boxShadow: "0 4px 24px -4px rgba(233,30,99,0.7)",
     animation: "datePulse 2s ease-in-out infinite",
-  } as React.CSSProperties;
+  };
 
   return (
     <motion.div
@@ -205,10 +213,14 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
 
       {/* Ambient glow orbs */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/4 top-1/3 h-80 w-80 -translate-x-1/2 rounded-full"
-          style={{ background: "oklch(0.35 0.18 350 / 0.3)", filter: "blur(100px)" }} />
-        <div className="absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full"
-          style={{ background: "oklch(0.62 0.19 14 / 0.2)", filter: "blur(90px)" }} />
+        <div
+          className="absolute left-1/4 top-1/3 h-80 w-80 -translate-x-1/2 rounded-full"
+          style={{ background: "oklch(0.35 0.18 350 / 0.3)", filter: "blur(100px)" }}
+        />
+        <div
+          className="absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full"
+          style={{ background: "oklch(0.62 0.19 14 / 0.2)", filter: "blur(90px)" }}
+        />
       </div>
 
       {/* Close */}
@@ -398,16 +410,21 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
               >
                 It's a Date! ❤️
               </h2>
-              <p style={{ fontFamily: "var(--font-hand)" }} className="mt-1 text-pink-300/70 text-lg">
+              <p
+                style={{ fontFamily: "var(--font-hand)" }}
+                className="mt-1 text-pink-300/70 text-lg"
+              >
                 Your perfect evening, all planned out.
               </p>
             </div>
 
             {/* Main card */}
-            <div className="rounded-3xl p-5 mb-4" style={glassCard}>
+            <div className="rounded-3xl p-5 mb-4" style={glassCard as CSSProperties}>
               {/* Date & time */}
-              <div className="flex items-center gap-3 mb-4 pb-4"
-                style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              <div
+                className="flex items-center gap-3 mb-4 pb-4"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+              >
                 <span className="text-2xl">📅</span>
                 <div>
                   <p className="text-xs tracking-[0.3em] text-pink-300/60 uppercase">When</p>
@@ -473,16 +490,14 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
                   transition={{ type: "spring", stiffness: 280 }}
                   className="rounded-3xl p-5 mb-5 text-center"
                   style={{
-                    background: "linear-gradient(135deg, rgba(233,30,99,0.2), rgba(194,24,91,0.15))",
+                    background:
+                      "linear-gradient(135deg, rgba(233,30,99,0.2), rgba(194,24,91,0.15))",
                     border: "1px solid rgba(233,30,99,0.35)",
                     animation: "dateGlow 2s ease-in-out infinite",
                   }}
                 >
                   <p className="text-3xl mb-2">🥂</p>
-                  <p
-                    style={{ fontFamily: "var(--font-display)" }}
-                    className="text-xl text-white"
-                  >
+                  <p style={{ fontFamily: "var(--font-display)" }} className="text-xl text-white">
                     It's a Date! ❤️
                   </p>
                   <p className="mt-1 text-sm text-pink-200/60">
@@ -504,7 +519,7 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
                 type="button"
                 onClick={generateICS}
                 className="w-full rounded-full py-3.5 text-sm font-semibold text-white flex items-center justify-center gap-2"
-                style={roseBtn}
+                style={roseBtn as CSSProperties}
               >
                 📅 Add to Calendar
               </button>
@@ -514,7 +529,10 @@ export function DateProposal({ onClose }: { onClose: () => void }) {
                 type="button"
                 onClick={() => celebrateBig()}
                 className="w-full rounded-full py-3 text-sm text-pink-300/70 flex items-center justify-center gap-2"
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
               >
                 🎉 Celebrate!
               </button>

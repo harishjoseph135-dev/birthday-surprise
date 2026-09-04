@@ -46,7 +46,9 @@ export function MusicPlayer({
   };
 
   const fmt = (s: number) =>
-    Number.isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}` : "0:00";
+    Number.isFinite(s)
+      ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`
+      : "0:00";
 
   return (
     <div className="text-center">
@@ -58,7 +60,14 @@ export function MusicPlayer({
         className="mx-auto mt-7 h-40 w-40 overflow-hidden rounded-full border-4 border-cream/20 shadow-[0_0_60px_-12px_oklch(0.62_0.19_14/0.7)] sm:h-48 sm:w-48"
         style={{ animation: playing ? "spin-slow 9s linear infinite" : undefined }}
       >
-        <img src={cover} alt={songTitle} loading="lazy" width={512} height={512} className="h-full w-full object-cover" />
+        <img
+          src={cover}
+          alt={songTitle}
+          loading="lazy"
+          width={512}
+          height={512}
+          className="h-full w-full object-cover"
+        />
       </motion.div>
 
       {/* visualizer */}

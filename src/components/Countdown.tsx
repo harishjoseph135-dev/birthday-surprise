@@ -31,10 +31,7 @@ export function Countdown({ date }: { date: string }) {
         animate={{ opacity: 1, scale: 1 }}
         className="mx-auto w-full max-w-2xl rounded-3xl glass px-6 py-8 text-center"
       >
-        <p
-          style={{ fontFamily: "var(--font-display)" }}
-          className="text-2xl text-gold sm:text-4xl"
-        >
+        <p style={{ fontFamily: "var(--font-display)" }} className="text-2xl text-gold sm:text-4xl">
           🎉 IT&apos;S YOUR SPECIAL DAY! 🎉
         </p>
       </motion.div>
@@ -55,10 +52,7 @@ export function Countdown({ date }: { date: string }) {
       </p>
       <div className="mx-auto mt-4 grid max-w-2xl grid-cols-4 gap-2 sm:gap-4">
         {cells.map((c) => (
-          <div
-            key={c.l}
-            className="rounded-2xl glass px-1 py-3 text-center sm:px-3 sm:py-5"
-          >
+          <div key={c.l} className="rounded-2xl glass px-1 py-3 text-center sm:px-3 sm:py-5">
             <div
               style={{ fontFamily: "var(--font-display)" }}
               className="text-2xl tabular-nums text-cream sm:text-4xl"

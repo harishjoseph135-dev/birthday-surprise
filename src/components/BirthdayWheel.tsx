@@ -83,7 +83,9 @@ export function BirthdayWheel() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[80] flex items-center justify-center bg-wine/85 p-5 backdrop-blur-md"
-            onClick={() => { if (!spinning) setOpen(false); }}
+            onClick={() => {
+              if (!spinning) setOpen(false);
+            }}
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -93,7 +95,9 @@ export function BirthdayWheel() {
               className="flex flex-col items-center gap-5"
               onClick={(e) => e.stopPropagation()}
             >
-              <p className="text-[0.65rem] tracking-[0.4em] text-gold uppercase">🎡 Spin The Birthday Wheel</p>
+              <p className="text-[0.65rem] tracking-[0.4em] text-gold uppercase">
+                🎡 Spin The Birthday Wheel
+              </p>
 
               {/* Wheel */}
               <div className="relative" style={{ width: SIZE, height: SIZE }}>
@@ -122,7 +126,12 @@ export function BirthdayWheel() {
                     const ty = R + R * 0.62 * Math.sin(mid);
                     return (
                       <g key={i}>
-                        <path d={wheelPath(i)} fill={COLORS[i % COLORS.length]} stroke="oklch(0.1 0.04 10)" strokeWidth="1.5" />
+                        <path
+                          d={wheelPath(i)}
+                          fill={COLORS[i % COLORS.length]}
+                          stroke="oklch(0.1 0.04 10)"
+                          strokeWidth="1.5"
+                        />
                         <text
                           x={tx}
                           y={ty}
@@ -139,7 +148,14 @@ export function BirthdayWheel() {
                     );
                   })}
                   {/* Center circle */}
-                  <circle cx={R} cy={R} r={18} fill="oklch(0.12 0.05 10)" stroke="oklch(0.82 0.12 85 / 0.6)" strokeWidth="2" />
+                  <circle
+                    cx={R}
+                    cy={R}
+                    r={18}
+                    fill="oklch(0.12 0.05 10)"
+                    stroke="oklch(0.82 0.12 85 / 0.6)"
+                    strokeWidth="2"
+                  />
                 </motion.svg>
               </div>
 
@@ -161,7 +177,10 @@ export function BirthdayWheel() {
                   className="max-w-xs rounded-2xl glass px-5 py-4 text-center"
                 >
                   <p className="text-lg">{result.label}</p>
-                  <p style={{ fontFamily: "var(--font-hand)" }} className="mt-2 text-sm text-cream/80">
+                  <p
+                    style={{ fontFamily: "var(--font-hand)" }}
+                    className="mt-2 text-sm text-cream/80"
+                  >
                     {result.msg}
                   </p>
                   <button

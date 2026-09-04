@@ -8,15 +8,15 @@ cinematic final reveal.
 
 `src/config/birthdayConfig.ts`
 
-| What | Where in the config |
-| --- | --- |
-| 1. Her name | `girlfriendName` |
-| 2. Birthday date | `birthdayDate` — format `"YYYY-MM-DDTHH:mm:ss"` |
-| 3. Secret PIN | `secretPin` (6 digits) + optional `pinHint` |
-| 4. Background music | `backgroundMusic` |
-| 5. Love messages | `surprises[…].message` / `title` |
+| What                     | Where in the config                                      |
+| ------------------------ | -------------------------------------------------------- |
+| 1. Her name              | `girlfriendName`                                         |
+| 2. Birthday date         | `birthdayDate` — format `"YYYY-MM-DDTHH:mm:ss"`          |
+| 3. Secret PIN            | `secretPin` (6 digits) + optional `pinHint`              |
+| 4. Background music      | `backgroundMusic`                                        |
+| 5. Love messages         | `surprises[…].message` / `title`                         |
 | 6. Final photo + message | the `type: "final"` surprise `image`, and `finalMessage` |
-| 7. Photos | `surprises[…].image` and the gallery `images` array |
+| 7. Photos                | `surprises[…].image` and the gallery `images` array      |
 
 ## 📸 Where to put your photos
 

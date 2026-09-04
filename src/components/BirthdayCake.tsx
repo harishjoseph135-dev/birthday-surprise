@@ -10,6 +10,7 @@ export function BirthdayCake() {
   const [wished, setWished] = useState(false);
   const micRef = useRef<MediaStream | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const rafRef = useRef<number>(0);
 
   const allOut = lit.every((l) => !l);
@@ -22,7 +23,14 @@ export function BirthdayCake() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         micRef.current = stream;
-        const ctx = new AudioContext();
+        if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
+          audioCtxRef.current.close();
+        }
+        const ctx = new (
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        )();
+        audioCtxRef.current = ctx;
         const source = ctx.createMediaStreamSource(stream);
         const analyser = ctx.createAnalyser();
         analyser.fftSize = 256;
@@ -55,6 +63,7 @@ export function BirthdayCake() {
       active = false;
       cancelAnimationFrame(rafRef.current);
       micRef.current?.getTracks().forEach((t) => t.stop());
+      audioCtxRef.current?.close().catch(() => {});
     };
   }, [open, wished]);
 
@@ -75,16 +84,22 @@ export function BirthdayCake() {
     });
   };
 
-  const reset = () => { setLit(Array(CANDLE_COUNT).fill(true)); setWished(false); };
+  const reset = () => {
+    setLit(Array(CANDLE_COUNT).fill(true));
+    setWished(false);
+  };
 
   return (
     <>
       <motion.button
         type="button"
-        onClick={() => { reset(); setOpen(true); }}
+        onClick={() => {
+          reset();
+          setOpen(true);
+        }}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.97 }}
-        className="mx-auto mt-2 flex cursor-pointer items-center gap-2 rounded-full glass px-5 py-2.5 text-sm text-cream transition hover:bg-primary/20"
+        className="mx-auto mt-2 flex cursor-pointer items-center gap-3 rounded-2xl glass px-8 py-4 text-base font-semibold text-cream transition hover:bg-primary/20"
       >
         🍰 Make a Wish
       </motion.button>
@@ -108,7 +123,9 @@ export function BirthdayCake() {
             >
               {!wished ? (
                 <>
-                  <p className="text-[0.65rem] tracking-[0.4em] text-gold uppercase">🍰 Make a Wish</p>
+                  <p className="text-[0.65rem] tracking-[0.4em] text-gold uppercase">
+                    🍰 Make a Wish
+                  </p>
                   <p className="mt-2 text-xs text-cream/60">Blow or tap the candles!</p>
 
                   {/* Cake visual */}
@@ -119,9 +136,13 @@ export function BirthdayCake() {
                         <motion.button
                           key={i}
                           type="button"
-                          onClick={(e) => { e.stopPropagation(); blowOne(); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            blowOne();
+                          }}
                           className="flex cursor-pointer flex-col items-center gap-0.5"
                           whileTap={{ scale: 0.9 }}
+                          aria-label={on ? `Blow out candle ${i + 1}` : `Candle ${i + 1} is out`}
                           title="Click to blow out"
                         >
                           <AnimatePresence>
@@ -156,7 +177,8 @@ export function BirthdayCake() {
                       className="w-48 rounded-lg"
                       style={{
                         height: 28,
-                        background: "linear-gradient(to right, oklch(0.62 0.19 14), oklch(0.85 0.07 8))",
+                        background:
+                          "linear-gradient(to right, oklch(0.62 0.19 14), oklch(0.85 0.07 8))",
                         boxShadow: "0 4px 20px -4px oklch(0.62 0.19 14 / 0.5)",
                       }}
                     />
@@ -165,7 +187,8 @@ export function BirthdayCake() {
                       style={{
                         height: 36,
                         marginTop: 2,
-                        background: "linear-gradient(to right, oklch(0.82 0.12 85), oklch(0.68 0.15 40))",
+                        background:
+                          "linear-gradient(to right, oklch(0.82 0.12 85), oklch(0.68 0.15 40))",
                       }}
                     />
                     <div
@@ -173,11 +196,13 @@ export function BirthdayCake() {
                       style={{
                         height: 40,
                         marginTop: 2,
-                        background: "linear-gradient(to right, oklch(0.65 0.17 40), oklch(0.55 0.2 350))",
+                        background:
+                          "linear-gradient(to right, oklch(0.65 0.17 40), oklch(0.55 0.2 350))",
                       }}
                     />
                     <div className="mt-1 text-xs text-cream/40">
-                      {lit.filter(Boolean).length} candle{lit.filter(Boolean).length !== 1 ? "s" : ""} left
+                      {lit.filter(Boolean).length} candle
+                      {lit.filter(Boolean).length !== 1 ? "s" : ""} left
                     </div>
                   </div>
 
@@ -192,7 +217,9 @@ export function BirthdayCake() {
               ) : (
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
                   <p className="text-4xl">🎉</p>
-                  <p className="mt-4 text-[0.65rem] tracking-[0.4em] text-gold uppercase">Wish Granted!</p>
+                  <p className="mt-4 text-[0.65rem] tracking-[0.4em] text-gold uppercase">
+                    Wish Granted!
+                  </p>
                   <p style={{ fontFamily: "var(--font-hand)" }} className="mt-3 text-xl text-cream">
                     Whatever you wished for... it's already coming 🌟
                   </p>

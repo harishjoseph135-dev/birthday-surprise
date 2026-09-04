@@ -45,11 +45,16 @@ export function BirthdayTicket({ name }: { name: string }) {
                 {/* Top stripe */}
                 <div
                   className="h-2 w-full"
-                  style={{ background: "linear-gradient(90deg, oklch(0.62 0.19 14), oklch(0.82 0.12 85), oklch(0.62 0.19 14))" }}
+                  style={{
+                    background:
+                      "linear-gradient(90deg, oklch(0.62 0.19 14), oklch(0.82 0.12 85), oklch(0.62 0.19 14))",
+                  }}
                 />
 
                 <div className="px-6 py-6 text-center">
-                  <p className="text-[0.6rem] tracking-[0.5em] text-gold uppercase">Official Document</p>
+                  <p className="text-[0.6rem] tracking-[0.5em] text-gold uppercase">
+                    Official Document
+                  </p>
                   <p className="mt-2 text-2xl">🎂</p>
                   <p
                     style={{ fontFamily: "var(--font-display)" }}
@@ -64,17 +69,20 @@ export function BirthdayTicket({ name }: { name: string }) {
                   {/* Dashed separator */}
                   <div className="my-4 border-t border-dashed border-cream/20" />
 
-                  <p
-                    style={{ fontFamily: "var(--font-hand)" }}
-                    className="text-2xl text-blush"
-                  >
+                  <p style={{ fontFamily: "var(--font-hand)" }} className="text-2xl text-blush">
                     {name}
                   </p>
 
                   <div className="mt-4 space-y-1 text-[0.65rem] text-cream/60">
-                    <p><span className="text-gold">STATUS:</span> Birthday Legend</p>
-                    <p><span className="text-gold">VALID:</span> Forever</p>
-                    <p><span className="text-gold">CLASS:</span> Best Friend Tier</p>
+                    <p>
+                      <span className="text-gold">STATUS:</span> Birthday Legend
+                    </p>
+                    <p>
+                      <span className="text-gold">VALID:</span> Forever
+                    </p>
+                    <p>
+                      <span className="text-gold">CLASS:</span> Best Friend Tier
+                    </p>
                   </div>
 
                   {/* QR decorative */}
@@ -84,7 +92,7 @@ export function BirthdayTicket({ name }: { name: string }) {
                         key={i}
                         className="rounded-[2px]"
                         style={{
-                          background: [0,1,4,5,2,7,10,13,15,11,14,3].includes(i)
+                          background: [0, 1, 4, 5, 2, 7, 10, 13, 15, 11, 14, 3].includes(i)
                             ? "oklch(0.82 0.12 85)"
                             : "transparent",
                         }}
@@ -101,7 +109,10 @@ export function BirthdayTicket({ name }: { name: string }) {
                 {/* Bottom stripe */}
                 <div
                   className="h-2 w-full"
-                  style={{ background: "linear-gradient(90deg, oklch(0.62 0.19 14), oklch(0.82 0.12 85), oklch(0.62 0.19 14))" }}
+                  style={{
+                    background:
+                      "linear-gradient(90deg, oklch(0.62 0.19 14), oklch(0.82 0.12 85), oklch(0.62 0.19 14))",
+                  }}
                 />
               </div>
 

@@ -33,7 +33,21 @@ export function FinalSurprise({
   const [showWait, setShowWait] = useState(false);
 
   useEffect(() => {
-    if (!open) { setStage(0); setShowExtraBtn(false); setShowWait(false); return; }
+    if (open) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      setStage(0);
+      setShowExtraBtn(false);
+      setShowWait(false);
+      return;
+    }
     const t1 = setTimeout(() => setStage(1), 2800);
     const t2 = setTimeout(() => {
       setStage(2);
@@ -44,7 +58,8 @@ export function FinalSurprise({
     const t3 = enableExtra ? setTimeout(() => setShowWait(true), 9000) : undefined;
     const t4 = enableExtra ? setTimeout(() => setShowExtraBtn(true), 11000) : undefined;
     return () => {
-      clearTimeout(t1); clearTimeout(t2);
+      clearTimeout(t1);
+      clearTimeout(t2);
       if (t3) clearTimeout(t3);
       if (t4) clearTimeout(t4);
     };
@@ -118,13 +133,17 @@ export function FinalSurprise({
                   exit={{ opacity: 0, scale: 1.12, filter: "blur(12px)" }}
                   transition={{ duration: 1.2 }}
                 >
-                  <p className="text-sm tracking-[0.4em] text-gold uppercase">
-                    🎂 Happy Birthday
-                  </p>
+                  <p className="text-sm tracking-[0.4em] text-gold uppercase">🎂 Happy Birthday</p>
                   <motion.p
                     style={{ fontFamily: "var(--font-hand)" }}
                     className="mt-4 text-5xl text-blush sm:text-7xl"
-                    animate={{ textShadow: ["0 0 20px oklch(0.85 0.07 8 / 0.5)", "0 0 60px oklch(0.85 0.07 8 / 0.9)", "0 0 20px oklch(0.85 0.07 8 / 0.5)"] }}
+                    animate={{
+                      textShadow: [
+                        "0 0 20px oklch(0.85 0.07 8 / 0.5)",
+                        "0 0 60px oklch(0.85 0.07 8 / 0.9)",
+                        "0 0 20px oklch(0.85 0.07 8 / 0.5)",
+                      ],
+                    }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
                     {name}
@@ -171,7 +190,10 @@ export function FinalSurprise({
                   animate={{ opacity: 1, scale: 1, rotate: -1, filter: "blur(0px)" }}
                   transition={{ delay: 0.7, duration: 1.4 }}
                   className="mx-auto mt-9 w-full max-w-sm rounded-2xl bg-cream p-3 pb-9"
-                  style={{ boxShadow: "0 0 60px -10px oklch(0.82 0.12 85 / 0.6), 0 40px 80px -25px rgba(0,0,0,0.85)" }}
+                  style={{
+                    boxShadow:
+                      "0 0 60px -10px oklch(0.82 0.12 85 / 0.6), 0 40px 80px -25px rgba(0,0,0,0.85)",
+                  }}
                 >
                   <img
                     src={image}
@@ -181,7 +203,10 @@ export function FinalSurprise({
                     height={1024}
                     className="aspect-square w-full rounded-lg object-cover"
                   />
-                  <p style={{ fontFamily: "var(--font-hand)" }} className="mt-3 text-center text-xl text-wine">
+                  <p
+                    style={{ fontFamily: "var(--font-hand)" }}
+                    className="mt-3 text-center text-xl text-wine"
+                  >
                     For you, {name} 🎂
                   </p>
                 </motion.div>
@@ -239,7 +264,7 @@ export function FinalSurprise({
                 </AnimatePresence>
 
                 <AnimatePresence>
-                  {showExtraBtn && stage !== 3 && (
+                  {showExtraBtn && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -255,10 +280,17 @@ export function FinalSurprise({
                         whileTap={{ scale: 0.97 }}
                         className="relative cursor-pointer rounded-full px-8 py-3 text-sm font-semibold text-primary-foreground"
                         style={{
-                          background: "linear-gradient(135deg, oklch(0.62 0.19 14), oklch(0.82 0.12 85))",
+                          background:
+                            "linear-gradient(135deg, oklch(0.62 0.19 14), oklch(0.82 0.12 85))",
                           boxShadow: "0 0 40px -8px oklch(0.82 0.12 85 / 0.8)",
                         }}
-                        animate={{ boxShadow: ["0 0 30px -8px oklch(0.62 0.19 14 / 0.6)", "0 0 60px -8px oklch(0.82 0.12 85 / 0.9)", "0 0 30px -8px oklch(0.62 0.19 14 / 0.6)"] }}
+                        animate={{
+                          boxShadow: [
+                            "0 0 30px -8px oklch(0.62 0.19 14 / 0.6)",
+                            "0 0 60px -8px oklch(0.82 0.12 85 / 0.9)",
+                            "0 0 30px -8px oklch(0.62 0.19 14 / 0.6)",
+                          ],
+                        }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
                         🎁 One Last Thing
@@ -294,7 +326,11 @@ export function FinalSurprise({
                     transition={{ delay: 0.6, duration: 1.2 }}
                     className="mx-auto mt-8 w-full max-w-xs rounded-2xl bg-cream p-3 pb-8 shadow-2xl"
                   >
-                    <img src={extraImage} alt="One last thing" className="aspect-square w-full rounded-lg object-cover" />
+                    <img
+                      src={extraImage}
+                      alt="One last thing"
+                      className="aspect-square w-full rounded-lg object-cover"
+                    />
                   </motion.div>
                 )}
 

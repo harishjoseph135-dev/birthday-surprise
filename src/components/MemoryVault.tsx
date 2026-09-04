@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export type VaultPhoto = {
@@ -11,8 +11,27 @@ export type VaultPhoto = {
 
 const TILTS = [-5, 3, -2, 6, -4, 2, -3, 5, -1, 4];
 
-export function MemoryVault({ title, subtitle, images }: { title: string; subtitle?: string; images: VaultPhoto[] }) {
+export function MemoryVault({
+  title,
+  subtitle,
+  images,
+}: {
+  title: string;
+  subtitle?: string;
+  images: VaultPhoto[];
+}) {
   const [active, setActive] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (active !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [active]);
 
   const step = (dir: number) =>
     setActive((cur) => (cur === null ? cur : (cur + dir + images.length) % images.length));
@@ -25,9 +44,7 @@ export function MemoryVault({ title, subtitle, images }: { title: string; subtit
         transition={{ duration: 0.6 }}
       >
         <p className="text-[0.65rem] tracking-[0.45em] text-gold uppercase">🔐 {title}</p>
-        {subtitle && (
-          <p className="mt-1 text-xs text-muted-foreground italic">{subtitle}</p>
-        )}
+        {subtitle && <p className="mt-1 text-xs text-muted-foreground italic">{subtitle}</p>}
       </motion.div>
 
       {/* Polaroid grid */}
@@ -59,9 +76,7 @@ export function MemoryVault({ title, subtitle, images }: { title: string; subtit
             >
               {img.caption}
             </p>
-            {img.date && (
-              <p className="mt-0.5 text-[0.55rem] text-wine/50">{img.date}</p>
-            )}
+            {img.date && <p className="mt-0.5 text-[0.55rem] text-wine/50">{img.date}</p>}
           </motion.button>
         ))}
       </div>
@@ -98,7 +113,10 @@ export function MemoryVault({ title, subtitle, images }: { title: string; subtit
                 alt={images[active]!.caption}
                 className="max-h-[55svh] w-auto max-w-[85vw] rounded-md object-contain"
               />
-              <p style={{ fontFamily: "var(--font-hand)" }} className="mt-3 text-center text-lg text-wine">
+              <p
+                style={{ fontFamily: "var(--font-hand)" }}
+                className="mt-3 text-center text-lg text-wine"
+              >
                 {images[active]!.caption}
               </p>
               {(images[active]!.date || images[active]!.location) && (

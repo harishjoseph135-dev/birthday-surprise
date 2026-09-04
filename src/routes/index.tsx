@@ -6,7 +6,6 @@ import { AchievementSystem, type Achievement } from "@/components/AchievementSys
 import { AwardsCard } from "@/components/AwardsCard";
 import { BalloonGrid } from "@/components/BalloonGrid";
 import { BirthdayCake } from "@/components/BirthdayCake";
-import { BloomingRose } from "@/components/BloomingRose";
 import { ComboSystem } from "@/components/ComboSystem";
 import { CustomCursor } from "@/components/CustomCursor";
 import { DreamyBackground } from "@/components/DreamyBackground";
@@ -19,14 +18,12 @@ import { MemoryVault } from "@/components/MemoryVault";
 import { MiniGame } from "@/components/MiniGame";
 import { MusicToggle } from "@/components/MusicToggle";
 import { PinLock } from "@/components/PinLock";
-import { RandomMessage } from "@/components/RandomMessage";
 import { RoastCard } from "@/components/RoastCard";
 import { SayYes } from "@/components/SayYes";
 import { SecretButton } from "@/components/SecretButton";
 import { SurpriseBox } from "@/components/SurpriseBox";
 import { SurpriseModal } from "@/components/SurpriseModal";
 import { birthdayConfig } from "@/config/birthdayConfig";
-import { playSparkle } from "@/lib/sounds";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,12 +49,9 @@ type AppStage = "loading" | "pin" | "intro" | "main";
 
 function Index() {
   const [stage, setStage] = useState<AppStage>("loading");
-  const [askMusic, setAskMusic] = useState(false);
-  const [showMusicButton, setShowMusicButton] = useState(false);
   const [popped, setPopped] = useState<number[]>([]);
   const [active, setActive] = useState<number | null>(null);
   const [finalOpen, setFinalOpen] = useState(false);
-  const [roseOpen, setRoseOpen] = useState(false);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   const surprises = birthdayConfig.surprises;
@@ -68,7 +62,6 @@ function Index() {
 
   const handleUnlock = () => {
     setStage("intro");
-    setAskMusic(true);
   };
 
   const handleIntroGo = () => {
@@ -108,9 +101,7 @@ function Index() {
 
       {/* Loading screen */}
       <AnimatePresence>
-        {stage === "loading" && (
-          <LoadingScreen key="loading" onDone={() => setStage("pin")} />
-        )}
+        {stage === "loading" && <LoadingScreen key="loading" onDone={() => setStage("pin")} />}
       </AnimatePresence>
 
       {/* PIN lock */}
@@ -128,11 +119,7 @@ function Index() {
       {/* Cinematic intro after PIN */}
       <AnimatePresence>
         {stage === "intro" && (
-          <IntroAnimation
-            key="intro"
-            name={birthdayConfig.friendName}
-            onDone={handleIntroGo}
-          />
+          <IntroAnimation key="intro" name={birthdayConfig.friendName} onDone={handleIntroGo} />
         )}
       </AnimatePresence>
 
@@ -168,11 +155,7 @@ function Index() {
             </p>
 
             {/* 3D Balloon Grid */}
-            <BalloonGrid
-              surprises={surprises}
-              popped={popped}
-              onPop={handlePop}
-            />
+            <BalloonGrid surprises={surprises} popped={popped} onPop={handlePop} />
 
             {/* Combo system */}
             <ComboSystem count={popped.length} />
@@ -186,7 +169,9 @@ function Index() {
               >
                 <p className="text-xs tracking-[0.25em] text-muted-foreground uppercase">
                   {popped.length} of {surprises.length} opened
-                  {popped.length < surprises.length ? " · keep going 🎈" : " · you found them all 🥳"}
+                  {popped.length < surprises.length
+                    ? " · keep going 🎈"
+                    : " · you found them all 🥳"}
                 </p>
 
                 {/* Progress bar */}
@@ -197,50 +182,6 @@ function Index() {
                     transition={{ duration: 0.6 }}
                   />
                 </div>
-
-                {/* Rose button — appears only when ALL hearts are opened */}
-                <AnimatePresence>
-                  {popped.length === surprises.length && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 18, scale: 0.88 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: 0.7, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                      className="mt-7 flex flex-col items-center gap-2"
-                    >
-                      <p className="text-[0.6rem] tracking-[0.35em] text-muted-foreground uppercase">
-                        One final gift...
-                      </p>
-                      <motion.button
-                        type="button"
-                        onClick={() => setRoseOpen(true)}
-                        whileHover={{ scale: 1.07, y: -4 }}
-                        whileTap={{ scale: 0.96 }}
-                        className="relative cursor-pointer rounded-full px-8 py-3.5 text-sm font-semibold text-white"
-                        style={{
-                          background: "linear-gradient(135deg, #7b0d2a, #c2185b, #e91e63)",
-                          boxShadow: "0 0 40px -8px rgba(233,30,99,0.85), 0 10px 30px -10px rgba(0,0,0,0.7)",
-                        }}
-                        animate={{
-                          boxShadow: [
-                            "0 0 25px -8px rgba(193,24,91,0.5)",
-                            "0 0 55px -8px rgba(233,30,99,0.95)",
-                            "0 0 25px -8px rgba(193,24,91,0.5)",
-                          ],
-                        }}
-                        transition={{ duration: 2.2, repeat: Infinity }}
-                      >
-                        🌹 Open Your Rose
-                        {/* Pulsing ring */}
-                        <motion.span
-                          className="absolute inset-0 rounded-full"
-                          style={{ background: "rgba(233,30,99,0.25)" }}
-                          animate={{ scale: [1, 1.35], opacity: [0.6, 0] }}
-                          transition={{ duration: 1.4, repeat: Infinity }}
-                        />
-                      </motion.button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
             )}
 
@@ -258,13 +199,9 @@ function Index() {
                 <p className="text-center text-[0.65rem] tracking-[0.4em] text-gold uppercase mb-4">
                   ✨ More surprises
                 </p>
-                <div className="flex flex-wrap justify-center gap-3">
+                <div className="flex flex-wrap justify-center gap-4">
                   <BirthdayCake />
                   <MiniGame />
-                </div>
-
-                <div className="mt-6 flex justify-center">
-                  <RandomMessage />
                 </div>
               </motion.div>
             )}
@@ -278,6 +215,9 @@ function Index() {
       {/* Achievement popups */}
       <AchievementSystem unlocked={achievements} />
 
+      {/* Background music toggle */}
+      <MusicToggle src={birthdayConfig.backgroundMusic} />
+
       {/* Modal for hearts 1–5 */}
       <SurpriseModal open={active !== null} onClose={() => setActive(null)}>
         {current?.type === "memory" && (
@@ -289,9 +229,7 @@ function Index() {
             onNext={() => setActive(null)}
           />
         )}
-        {current?.type === "say-yes" && (
-          <SayYes name={birthdayConfig.friendName} />
-        )}
+        {current?.type === "say-yes" && <SayYes name={birthdayConfig.friendName} />}
         {current?.type === "roast" && (
           <RoastCard
             name={birthdayConfig.friendName}
@@ -304,13 +242,13 @@ function Index() {
           <FriendshipLetter
             title={current.title}
             message={current.message}
-            closing={current.closing}
+            {...(current.closing !== undefined && { closing: current.closing })}
           />
         )}
         {current?.type === "vault" && (
           <MemoryVault
             title={current.title}
-            subtitle={current.subtitle}
+            {...(current.subtitle !== undefined && { subtitle: current.subtitle })}
             images={current.images}
           />
         )}
@@ -319,7 +257,7 @@ function Index() {
             title={current.title}
             name={birthdayConfig.friendName}
             awards={current.awards}
-            finalLine={current.finalLine}
+            {...(current.finalLine !== undefined && { finalLine: current.finalLine })}
           />
         )}
       </SurpriseModal>
@@ -335,57 +273,9 @@ function Index() {
         message={birthdayConfig.finalMessage}
         enableExtra={birthdayConfig.enableFinalExtraSurprise}
         extraMessage={birthdayConfig.finalExtraMessage}
-        extraImage={birthdayConfig.finalExtraImage || undefined}
+        {...(birthdayConfig.finalExtraImage ? { extraImage: birthdayConfig.finalExtraImage } : {})}
         onClose={() => setFinalOpen(false)}
       />
-
-      {/* Music consent prompt — only after main stage is fully loaded */}
-      <AnimatePresence>
-        {askMusic && stage === "main" && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-            className="fixed inset-x-4 bottom-6 z-40 mx-auto max-w-sm rounded-2xl glass p-4 text-center"
-            style={{ boxShadow: "0 0 30px -8px rgba(0,0,0,0.6)" }}
-          >
-            <p className="text-sm text-cream">🎵 Turn on the music?</p>
-            <div className="mt-3 flex justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  playSparkle();
-                  setShowMusicButton(true);
-                  setAskMusic(false);
-                }}
-                className="cursor-pointer rounded-full bg-primary px-5 py-2 text-sm text-primary-foreground transition hover:brightness-110"
-              >
-                Yes please
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowMusicButton(true);
-                  setAskMusic(false);
-                }}
-                className="cursor-pointer rounded-full bg-secondary/70 px-5 py-2 text-sm text-cream transition hover:bg-secondary"
-              >
-                Maybe later
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {showMusicButton && <MusicToggle src={birthdayConfig.backgroundMusic} />}
-
-      {/* Blooming Rose — unlocked after all 6 hearts are opened */}
-      <AnimatePresence>
-        {roseOpen && (
-          <BloomingRose key="rose" onClose={() => setRoseOpen(false)} />
-        )}
-      </AnimatePresence>
     </main>
   );
 }

@@ -49,7 +49,10 @@ export function SurpriseBox({ poppedCount, total }: { poppedCount: number; total
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[80] flex items-center justify-center bg-wine/80 p-5 backdrop-blur-md"
-            onClick={() => { setOpen(false); setRevealed(false); }}
+            onClick={() => {
+              setOpen(false);
+              setRevealed(false);
+            }}
           >
             <motion.div
               initial={{ scale: 0.6, opacity: 0, y: 30 }}
@@ -60,24 +63,29 @@ export function SurpriseBox({ poppedCount, total }: { poppedCount: number; total
               onClick={(e) => e.stopPropagation()}
             >
               {!revealed ? (
-                <motion.p className="text-5xl" animate={{ rotate: [0, -10, 10, -5, 0] }} transition={{ duration: 0.5 }}>
+                <motion.p
+                  className="text-5xl"
+                  animate={{ rotate: [0, -10, 10, -5, 0] }}
+                  transition={{ duration: 0.5 }}
+                >
                   🎁
                 </motion.p>
               ) : (
                 <>
                   <p className="text-4xl">🎉</p>
-                  <p className="mt-4 text-[0.65rem] tracking-[0.4em] text-gold uppercase">Halfway there...</p>
-                  <p
-                    style={{ fontFamily: "var(--font-hand)" }}
-                    className="mt-3 text-xl text-cream"
-                  >
+                  <p className="mt-4 text-[0.65rem] tracking-[0.4em] text-gold uppercase">
+                    Halfway there...
+                  </p>
+                  <p style={{ fontFamily: "var(--font-hand)" }} className="mt-3 text-xl text-cream">
                     Keep going 👀
                   </p>
 
                   {/* Progress */}
                   <div className="mt-5">
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{poppedCount} / {total} SURPRISES UNLOCKED</span>
+                      <span>
+                        {poppedCount} / {total} SURPRISES UNLOCKED
+                      </span>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
                       <motion.div
@@ -91,7 +99,10 @@ export function SurpriseBox({ poppedCount, total }: { poppedCount: number; total
 
                   <button
                     type="button"
-                    onClick={() => { setOpen(false); setRevealed(false); }}
+                    onClick={() => {
+                      setOpen(false);
+                      setRevealed(false);
+                    }}
                     className="mt-6 cursor-pointer rounded-full bg-primary px-6 py-2.5 text-sm text-primary-foreground transition hover:brightness-110"
                   >
                     Back to balloons 🎈

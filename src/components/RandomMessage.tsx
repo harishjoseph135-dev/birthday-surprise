@@ -50,7 +50,10 @@ export function RandomMessage() {
             style={{ transformPerspective: 600 }}
             className="max-w-xs rounded-2xl glass px-5 py-4 text-center"
           >
-            <p style={{ fontFamily: "var(--font-hand)" }} className="text-base leading-relaxed text-cream">
+            <p
+              style={{ fontFamily: "var(--font-hand)" }}
+              className="text-base leading-relaxed text-cream"
+            >
               {msg}
             </p>
           </motion.div>
